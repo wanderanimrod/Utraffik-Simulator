@@ -23,6 +23,6 @@ class TwoLaneOneWayEdgeTest(TestCase):
         self.assertEquals(self.edge.first_lane, self.first_lane)
         self.assertEquals(self.edge.second_lane, self.second_lane)
 
-    def test_should_refuse_addition_of_other_lanes(self):
+    def test_should_refuse_addition_of_more_than_two_lanes(self):
         with self.assertRaises(Exception):
             Lane(2, self.edge)
