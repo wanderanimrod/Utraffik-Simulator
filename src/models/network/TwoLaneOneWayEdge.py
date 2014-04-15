@@ -6,7 +6,10 @@ class TwoLaneOneWayEdge:
         self.second_lane = None
 
     def lane_next_to(self, lane):
-        pass
+        if lane == self.first_lane:
+            return self.second_lane
+        elif lane == self.second_lane:
+            return self.first_lane
 
     def add_lane(self, lane):
         if self.first_lane is None:

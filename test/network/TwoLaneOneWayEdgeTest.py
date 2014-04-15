@@ -10,7 +10,6 @@ class TwoLaneOneWayEdgeTest(TestCase):
         self.first_lane = Lane(0, self.edge)
         self.second_lane = Lane(1, self.edge)
 
-    # FIXME This test fails
     def test_should_get_next_lane_in_alternate_fashion(self):
         self.assertEquals(self.edge.lane_next_to(self.first_lane), self.second_lane)
         self.assertEquals(self.edge.lane_next_to(self.second_lane), self.first_lane)
