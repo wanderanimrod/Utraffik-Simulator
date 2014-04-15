@@ -1,0 +1,6 @@
+class Vehicle:
+
+    def __init__(self, vehicle_id, lane):
+        self.id = vehicle_id
+        self.lane = lane
+        pass
