@@ -20,12 +20,9 @@ class TwoLaneOneWayEdgeTest(TestCase):
         self.assertEquals(edge.first_lane, lane)
 
     def test_should_add_two_lanes_to_itself(self):
-        edge = TwoLaneOneWayEdge(0)
-        lane_1 = Lane(0, edge)
-        lane_2 = Lane(1, edge)
-        self.assertEquals(edge.first_lane, lane_1)
-        self.assertEquals(edge.second_lane, lane_2)
+        self.assertEquals(self.edge.first_lane, self.first_lane)
+        self.assertEquals(self.edge.second_lane, self.second_lane)
 
     def test_should_refuse_addition_of_other_lanes(self):
-        # NOT FAILING!! SHOULD
-        self.assertRaises(Exception, callableObj=Lane(2, self.edge))
+        with self.assertRaises(Exception):
+            Lane(2, self.edge)
