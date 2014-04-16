@@ -10,3 +10,6 @@ class Lane:
 
     def add_vehicle(self, vehicle):
         self.vehicles.append(vehicle)
+
+    def remove_vehicle(self, vehicle):
+        self.vehicles.remove(vehicle)

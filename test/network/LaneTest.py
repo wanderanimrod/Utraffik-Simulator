@@ -23,6 +23,11 @@ class LaneTest(TestCase):
         vehicle = Vehicle(0, self.lane)
         self.assertTrue(self.lane.vehicles.__contains__(vehicle))
 
+    def test_should_remove_vehicle_from_self(self):
+        vehicle = Vehicle(0, self.lane)
+        self.lane.remove_vehicle(vehicle)
+        self.assertFalse(self.lane.vehicles.__contains__(vehicle))
+
     def make_lane(self, id=0):
         edge = TwoLaneOneWayEdge(0)
         return Lane(id, edge)
