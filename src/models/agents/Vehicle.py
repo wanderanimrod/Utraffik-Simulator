@@ -4,3 +4,4 @@ class Vehicle:
         self.id = vehicle_id
         self.lane = lane
         self.lane.add_vehicle(self)
+        self.position = 0
