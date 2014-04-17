@@ -8,6 +8,7 @@ class LaneTest(TestCase):
 
     def setUp(self):
         self.lane = self.make_lane()
+        self.adjacent_lane = self.make_lane(id=1)
 
     # def test_should_add_itself_to_edge_upon_instantiation(self):
     #     add_lane_stub = Mock(TwoLaneOneWayEdge.add_lane)
@@ -21,12 +22,12 @@ class LaneTest(TestCase):
 
     def test_should_add_vehicle_to_itself(self):
         vehicle = Vehicle(0, self.lane)
-        self.assertTrue(self.lane.vehicles.__contains__(vehicle))
+        self.assertTrue(self.lane.__dict__['_Lane__vehicles'].__contains__(vehicle))
 
     def test_should_remove_vehicle_from_self(self):
         vehicle = Vehicle(0, self.lane)
         self.lane.remove_vehicle(vehicle)
-        self.assertFalse(self.lane.vehicles.__contains__(vehicle))
+        self.assertFalse(self.lane.__dict__['_Lane__vehicles'].__contains__(vehicle))
 
     def test_should_get_leading_vehicle(self):
         leader, follower, lane = self.make_leader_and_follower()
@@ -45,6 +46,27 @@ class LaneTest(TestCase):
         trailer = Vehicle(0, self.lane)
         follower_returned = self.lane.get_follower(trailer)
         self.assert_is_dummy_follower(follower_returned)
+
+    def test_should_get_prospective_leader_for_vehicle_on_another_lane(self):
+        prospective_leader = Vehicle(0, self.lane)
+        prospective_leader.position = 100
+        vehicle_joining = Vehicle(1, self.adjacent_lane)
+        vehicle_joining.position = 20
+        prospective_leader_returned = self.lane.get_prospective_leader(vehicle_joining)
+        self.assertEqual(prospective_leader_returned, prospective_leader)
+
+    def test_should_insert_vehicle_into_its_correct_position_on_lane(self):
+        leader, follower, lane = self.make_leader_and_follower()
+        middle_vehicle = Vehicle(11, self.adjacent_lane)
+        middle_vehicle.position = (leader.position - follower.position)/2
+        lane.insert_vehicle_at_current_position(middle_vehicle)
+        self.assert_vehicles_are_in_order(lane.__dict__['_Lane__vehicles'])
+
+    def assert_vehicles_are_in_order(self, vehicles):
+        for follower in vehicles[1:]:
+            leader = vehicles[vehicles.index(follower) - 1]
+            leader_is_ahead_of_follower = lambda l, f: l.position >= f.position
+            self.assertTrue(leader_is_ahead_of_follower(leader, follower))
 
     def make_leader_and_follower(self):
         leader = Vehicle(0, self.lane)
