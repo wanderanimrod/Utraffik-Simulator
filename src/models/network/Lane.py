@@ -13,3 +13,7 @@ class Lane:
 
     def remove_vehicle(self, vehicle):
         self.vehicles.remove(vehicle)
+
+    def get_leader(self, requester):
+        index_of_requester = self.vehicles.index(requester)
+        return self.vehicles[index_of_requester - 1]

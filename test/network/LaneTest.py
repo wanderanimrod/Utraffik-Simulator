@@ -28,6 +28,14 @@ class LaneTest(TestCase):
         self.lane.remove_vehicle(vehicle)
         self.assertFalse(self.lane.vehicles.__contains__(vehicle))
 
+    def test_should_get_leading_vehicle(self):
+        leader = Vehicle(0, self.lane)
+        leader.position = 10
+        follower = Vehicle(0, self.lane)
+        self.assertEqual(self.lane.get_leader(follower), leader)
+
+    # TODO Test that vehicles upon insert are always sorted
+
     def make_lane(self, id=0):
         edge = TwoLaneOneWayEdge(0)
         return Lane(id, edge)
