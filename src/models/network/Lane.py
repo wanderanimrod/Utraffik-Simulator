@@ -24,15 +24,15 @@ class Lane:
         return self.__get_follower_or_dummy(requester, self.__vehicles)
 
     def get_prospective_leader(self, vehicle_joining):
-        sorted_vehicles = self.__get_sorted_vehicles_with_new_vehicle_inserted(vehicle_joining, self.__vehicles)
+        sorted_vehicles = self.__copy_insert_and_sort(vehicle_joining, self.__vehicles)
         return self.__get_leader_or_dummy(vehicle_joining, sorted_vehicles)
 
     def get_prospective_follower(self, vehicle_joining):
-        sorted_vehicles = self.__get_sorted_vehicles_with_new_vehicle_inserted(vehicle_joining, self.__vehicles)
+        sorted_vehicles = self.__copy_insert_and_sort(vehicle_joining, self.__vehicles)
         return self.__get_follower_or_dummy(vehicle_joining, sorted_vehicles)
 
     def insert_vehicle_at_current_position(self, vehicle):
-        sorted_vehicles = self.__get_sorted_vehicles_with_new_vehicle_inserted(vehicle, self.__vehicles)
+        sorted_vehicles = self.__copy_insert_and_sort(vehicle, self.__vehicles)
         self.__vehicles = sorted_vehicles
 
     @staticmethod
@@ -50,6 +50,6 @@ class Lane:
         return vehicles[index_of_requester + 1]
 
     @staticmethod
-    def __get_sorted_vehicles_with_new_vehicle_inserted(vehicle, vehicles):
+    def __copy_insert_and_sort(vehicle, vehicles):
         vehicles.append(vehicle)
         return sorted(vehicles, key=lambda car: -car.position)
