@@ -17,4 +17,4 @@ class TwoLaneOneWayEdge:
         elif self.second_lane is None:
             self.second_lane = lane
         else:
-            raise Exception("Two Lane Edge already has tow lanes.")
+            raise Exception("Two Lane Edge already has two lanes.")
