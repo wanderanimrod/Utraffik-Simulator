@@ -58,12 +58,12 @@ class LaneTest(TestCase):
         edge = TwoLaneOneWayEdge(0)
         return Lane(id, edge)
 
-    def assert_is_dummy_leader(self, leader_returned):
-        self.assertEqual(leader_returned.position, 100000)
-        self.assertEqual(leader_returned.velocity, 33.3)
+    def assert_is_dummy_leader(self, vehicle):
+        self.assertEqual(vehicle.position, 100000)
+        self.assertEqual(vehicle.velocity, 33.3)
 
-    def assert_is_dummy_follower(self, follower_returned):
-        self.assertEqual(follower_returned.position, 0)
-        self.assertEqual(follower_returned.acceleration, 0)
-        self.assertEqual(follower_returned.desired_velocity, 0)
-        self.assertEqual(follower_returned.velocity, 0)
+    def assert_is_dummy_follower(self, vehicle):
+        self.assertEqual(vehicle.position, 0)
+        self.assertEqual(vehicle.acceleration, 0)
+        self.assertEqual(vehicle.desired_velocity, 0)
+        self.assertEqual(vehicle.velocity, 0)
