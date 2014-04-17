@@ -32,6 +32,11 @@ class LaneTest(TestCase):
         leader, follower, lane = self.make_leader_and_follower()
         self.assertEqual(lane.get_leader(follower), leader)
 
+    def test_should_return_leader_as_vehicle_far_away_when_requester_is_the_leader(self):
+        leader = Vehicle(0, self.lane)
+        leader_returned = self.lane.get_leader(leader)
+        self.assert_is_dummy_leader(leader_returned)
+
     def test_should_get_following_vehicle(self):
         leader, follower, lane = self.make_leader_and_follower()
         self.assertEqual(lane.get_follower(leader), follower)
@@ -47,3 +52,7 @@ class LaneTest(TestCase):
     def make_lane(self, id=0):
         edge = TwoLaneOneWayEdge(0)
         return Lane(id, edge)
+
+    def assert_is_dummy_leader(self, leader_returned):
+        self.assertEqual(leader_returned.position, 100000)
+        self.assertEqual(leader_returned.velocity, 33.3)

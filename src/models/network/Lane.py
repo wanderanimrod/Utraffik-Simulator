@@ -1,3 +1,6 @@
+from models.agents.vehicle_factory import VehicleFactory
+
+
 class Lane:
     def __init__(self, lane_id, edge):
         self.id = lane_id
@@ -16,6 +19,8 @@ class Lane:
 
     def get_leader(self, requester):
         index_of_requester = self.vehicles.index(requester)
+        if index_of_requester == 0:
+            return VehicleFactory.make_dummy_leader()
         return self.vehicles[index_of_requester - 1]
 
     def get_follower(self, requester):
