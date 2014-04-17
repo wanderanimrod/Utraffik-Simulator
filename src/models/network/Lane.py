@@ -17,3 +17,7 @@ class Lane:
     def get_leader(self, requester):
         index_of_requester = self.vehicles.index(requester)
         return self.vehicles[index_of_requester - 1]
+
+    def get_follower(self, requester):
+        index_of_requester = self.vehicles.index(requester)
+        return self.vehicles[index_of_requester + 1]
