@@ -1,6 +1,6 @@
 from unittest import TestCase
-from models.network.Lane import Lane
-from models.network.TwoLaneOneWayEdge import TwoLaneOneWayEdge
+from models.network.lane import Lane
+from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 
 
 class TwoLaneOneWayEdgeTest(TestCase):

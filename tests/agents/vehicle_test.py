@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from mock import Mock
 
-from models.agents.Vehicle import Vehicle
-from models.network.Lane import Lane
+from models.agents.vehicle import Vehicle
+from models.network.lane import Lane
 
 
 class VehicleTest(TestCase):

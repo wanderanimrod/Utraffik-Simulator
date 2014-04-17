@@ -1,7 +1,7 @@
 from unittest import TestCase
-from models.agents.Vehicle import Vehicle
-from models.network.Lane import Lane
-from models.network.TwoLaneOneWayEdge import TwoLaneOneWayEdge
+from models.agents.vehicle import Vehicle
+from models.network.lane import Lane
+from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 
 
 class LaneTest(TestCase):
