@@ -55,6 +55,11 @@ class LaneTest(TestCase):
         prospective_leader_returned = self.lane.get_prospective_leader(vehicle_joining)
         self.assertEqual(prospective_leader_returned, prospective_leader)
 
+    def test_should_return_prospective_leader_as_vehicle_far_away_if_requester_will_be_the_leader_on_destination_lane(self):
+        vehicle_joining = Vehicle(0, self.adjacent_lane)
+        prospective_leader = self.lane.get_prospective_leader(vehicle_joining)
+        self.assert_is_dummy_leader(prospective_leader)
+
     def test_should_insert_vehicle_into_its_correct_position_on_lane(self):
         leader, follower, lane = self.make_leader_and_follower()
         middle_vehicle = Vehicle(11, self.adjacent_lane)
