@@ -25,4 +25,6 @@ class Lane:
 
     def get_follower(self, requester):
         index_of_requester = self.vehicles.index(requester)
+        if index_of_requester == len(self.vehicles) - 1:
+            return VehicleFactory.make_dummy_follower()
         return self.vehicles[index_of_requester + 1]

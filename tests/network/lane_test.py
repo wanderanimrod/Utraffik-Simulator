@@ -41,13 +41,18 @@ class LaneTest(TestCase):
         leader, follower, lane = self.make_leader_and_follower()
         self.assertEqual(lane.get_follower(leader), follower)
 
+    def test_should_return_follower_as_stationary_vehicle_when_requester_is_the_trailer(self):
+        trailer = Vehicle(0, self.lane)
+        follower_returned = self.lane.get_follower(trailer)
+        self.assert_is_dummy_follower(follower_returned)
+
     def make_leader_and_follower(self):
         leader = Vehicle(0, self.lane)
         leader.position = 10
         follower = Vehicle(0, self.lane)
         return leader, follower, self.lane
 
-# TODO Test that vehicles upon insert are always sorted
+    # TODO Test that vehicles upon insert are always sorted
 
     def make_lane(self, id=0):
         edge = TwoLaneOneWayEdge(0)
@@ -56,3 +61,9 @@ class LaneTest(TestCase):
     def assert_is_dummy_leader(self, leader_returned):
         self.assertEqual(leader_returned.position, 100000)
         self.assertEqual(leader_returned.velocity, 33.3)
+
+    def assert_is_dummy_follower(self, follower_returned):
+        self.assertEqual(follower_returned.position, 0)
+        self.assertEqual(follower_returned.acceleration, 0)
+        self.assertEqual(follower_returned.desired_velocity, 0)
+        self.assertEqual(follower_returned.velocity, 0)

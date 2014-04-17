@@ -7,3 +7,5 @@ class Vehicle:
             self.lane.add_vehicle(self)
         self.position = 0
         self.velocity = 0
+        self.acceleration = 0
+        self.desired_velocity = 0
