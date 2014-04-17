@@ -1,9 +1,8 @@
 from unittest import TestCase
 
-from mock import Mock
+from mockito import mock
 
 from models.agents.vehicle import Vehicle
-from models.network.lane import Lane
 
 
 class VehicleTest(TestCase):
@@ -13,5 +12,5 @@ class VehicleTest(TestCase):
         pass
 
     def test_should_be_created_with_position_zero(self):
-        vehicle = Vehicle(0, Mock(Lane))
+        vehicle = Vehicle(0, mock())
         self.assertEqual(vehicle.position, 0)
