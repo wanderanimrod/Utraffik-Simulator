@@ -48,17 +48,19 @@ class LaneTest(TestCase):
         self.assert_is_dummy_follower(follower_returned)
 
     def test_should_get_prospective_leader_for_vehicle_on_another_lane(self):
-        prospective_leader = Vehicle(0, self.lane)
-        prospective_leader.position = 100
-        vehicle_joining = Vehicle(1, self.adjacent_lane)
-        vehicle_joining.position = 20
+        prospective_leader, vehicle_joining, _ = self.create_prospective_lane_change_scene()
         prospective_leader_returned = self.lane.get_prospective_leader(vehicle_joining)
         self.assertEqual(prospective_leader_returned, prospective_leader)
 
-    def test_should_return_prospective_leader_as_vehicle_far_away_if_requester_will_be_the_leader_on_destination_lane(self):
+    def test_should_return_prospective_leader_as_vehicle_far_away_if_requester_will_be_the_leader_on_target_lane(self):
         vehicle_joining = Vehicle(0, self.adjacent_lane)
         prospective_leader = self.lane.get_prospective_leader(vehicle_joining)
         self.assert_is_dummy_leader(prospective_leader)
+
+    def test_should_get_prospective_follower_for_vehicle_on_another_lane(self):
+        _, vehicle_joining, prospective_follower = self.create_prospective_lane_change_scene()
+        prospective_follower_returned = self.lane.get_prospective_follower(vehicle_joining)
+        self.assertEqual(prospective_follower_returned, prospective_follower)
 
     def test_should_insert_vehicle_into_its_correct_position_on_lane(self):
         leader, follower, lane = self.make_leader_and_follower()
@@ -79,7 +81,13 @@ class LaneTest(TestCase):
         follower = Vehicle(0, self.lane)
         return leader, follower, self.lane
 
-    # TODO Test that vehicles upon insert are always sorted
+    def create_prospective_lane_change_scene(self):
+        prospective_leader = Vehicle(0, self.lane)
+        prospective_leader.position = 100
+        prospective_follower = Vehicle(2, self.lane)
+        vehicle_joining = Vehicle(1, self.adjacent_lane)
+        vehicle_joining.position = 20
+        return prospective_leader, vehicle_joining, prospective_follower
 
     def make_lane(self, id=0):
         edge = TwoLaneOneWayEdge(0)
