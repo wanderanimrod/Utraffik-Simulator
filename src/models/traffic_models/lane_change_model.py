@@ -7,9 +7,16 @@ class LaneChangeModel:
     def __init__(self):
         pass
 
-    @staticmethod
-    def vehicle_should_change_lane(vehicle):
-        pass
+    @classmethod
+    def vehicle_should_change_lane(cls, vehicle):
+        if vehicle.acceleration < vehicle.max_acceleration:
+            target_lane = vehicle.lane.get_next_lane()
+            prospective_follower = target_lane.get_prospective_follower(vehicle)
+            if cls.__clearance_from(vehicle, prospective_follower) >= Vehicle.min_clearance:
+                follower = vehicle.lane.get_follower(vehicle)
+                # lane_change_incentive = vehicle.__calculate_lane_change_incentive(follower, prospective_follower)
+                return True
+        return False
 
     @classmethod
     def __calculate_lane_change_incentive(cls, requester, follower, prospective_follower):
@@ -25,3 +32,7 @@ class LaneChangeModel:
         acceleration_before = gainer.acceleration
         acceleration_after = Idm.calculate_acceleration(gainer, leader)
         return acceleration_after - acceleration_before
+
+    @classmethod
+    def __clearance_from(cls, leader, follower):
+        return leader.position - leader.length - follower.position

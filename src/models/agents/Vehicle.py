@@ -16,18 +16,3 @@ class Vehicle:
         self.desired_deceleration = 1.67
         self.length = 5.0
         self.politeness = 0.5
-
-    def __should_change_lane(self):
-        if self.acceleration < self.max_acceleration:
-            target_lane = self.lane.get_next_lane()
-            prospective_follower = target_lane.get_prospective_follower(self)
-            if self.__clearance_from(prospective_follower) >= Vehicle.min_clearance:
-                follower = self.lane.get_follower(self)
-                lane_change_incentive = self.__calculate_lane_change_incentive(follower, prospective_follower)
-                return True
-        return False
-
-
-
-    def __clearance_from(self, follower):
-        return self.position - self.length - follower.position
