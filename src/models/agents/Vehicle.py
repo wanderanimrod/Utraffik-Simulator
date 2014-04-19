@@ -28,3 +28,8 @@ class Vehicle:
             return a * (1 - (v/self.desired_velocity)**Vehicle.delta - (s_star/s)**2)
         except ZeroDivisionError:
             return 0.0
+
+    def should_change_lane(self):
+        if self.acceleration < self.max_acceleration:
+            return True
+        return False
