@@ -4,6 +4,7 @@ from mockito import mock
 
 from models.agents.vehicle import Vehicle
 from models.agents.vehicle_factory import VehicleFactory
+from models.traffic_models.idm import Idm
 
 
 class IdmTest(TestCase):
@@ -45,4 +46,4 @@ class IdmTest(TestCase):
         self.assertEqual(acceleration, 0.0)
 
     def calculate_acceleration(self, requester, leader):
-        return requester._Vehicle__calculate_acceleration(leader)
+        return Idm.calculate_acceleration(requester, leader)
