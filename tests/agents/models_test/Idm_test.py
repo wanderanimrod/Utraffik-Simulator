@@ -14,8 +14,6 @@ class IdmTest(TestCase):
         self.leader_far_away = VehicleFactory.make_dummy_leader()
 
     def test_should_return_maximum_acceleration_if_leader_is_far_away(self):
-
-        when(self.lane.get_leader()).thenReturn(self.leader_far_away)
         acceleration = self.calculate_acceleration(self.vehicle, self.leader_far_away)
         self.assertAlmostEqual(acceleration, self.vehicle.max_acceleration)
     
