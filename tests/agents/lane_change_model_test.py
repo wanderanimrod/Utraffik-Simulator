@@ -13,11 +13,11 @@ class LaneChangeModelTest(TestCase):
         self.target_lane = mock()
         when(self.lane).get_next_lane().thenReturn(self.target_lane)
         self.vehicle = Vehicle(0, self.lane)
-        self.make_should_change_lane_method_visible(self.vehicle)
+        self.append_helper_methods_to(self.vehicle)
 
     def test_should_okay_lane_change_if_acceleration_is_less_than_max_acceleration(self):
         vehicle = self.make_lane_change_scenario_with_ample_clearance(self.vehicle)
-        vehicle.acceleration = vehicle.max_acceleration / 2
+        self.put_acceleration_at_sub_optimal_level(vehicle)
         self.assertTrue(vehicle.should_change_lane())
 
     def test_should_not_change_lane_if_acceleration_is_equal_to_max_acceleration(self):
@@ -27,7 +27,12 @@ class LaneChangeModelTest(TestCase):
 
     def test_should_not_okay_lane_change_if_clearance_from_prospective_follower_will_not_be_enough(self):
         vehicle = self.make_lane_change_scenario_with_little_clearance(self.vehicle)
+        self.put_acceleration_at_sub_optimal_level(vehicle)
         self.assertFalse(vehicle.should_change_lane())
+
+    def test_should_okay_lane_change_if_clearance_from_prospective_follower_will_be_enough(self):
+        vehicle = self.make_lane_change_scenario_with_ample_clearance(self.vehicle)
+        self.assertTrue(vehicle.should_change_lane())
 
     def make_lane_change_scenario_with_ample_clearance(self, leader):
         leader.position = 100
@@ -45,5 +50,8 @@ class LaneChangeModelTest(TestCase):
     def mock_prospective_follower(self, leader, follower):
         when(self.target_lane).get_prospective_follower(leader).thenReturn(follower)
 
-    def make_should_change_lane_method_visible(self, vehicle):
+    def append_helper_methods_to(self, vehicle):
         vehicle.should_change_lane = vehicle._Vehicle__should_change_lane
+
+    def put_acceleration_at_sub_optimal_level(self, vehicle):
+        vehicle.acceleration = vehicle.max_acceleration / 2
