@@ -16,6 +16,7 @@ class Vehicle:
         self.desired_deceleration = 1.67
         self.length = 5
 
+    # Variable names used as described in Wikipedia entry on IDM
     def __calculate_acceleration(self, leader):
         v = self.velocity
         a = self.max_acceleration
