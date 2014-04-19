@@ -35,6 +35,9 @@ class Lane:
         sorted_vehicles = self.__copy_insert_and_sort(vehicle, self.__vehicles)
         self.__vehicles = sorted_vehicles
 
+    def get_next_lane(self):
+        return self.__parent_edge.lane_next_to(self)
+
     @staticmethod
     def __get_leader_or_dummy(requester, vehicles):
         index_of_requester = vehicles.index(requester)
