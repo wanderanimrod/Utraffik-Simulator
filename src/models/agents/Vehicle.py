@@ -25,3 +25,6 @@ class Vehicle:
 
     def follower(self):
         return self.lane.get_follower(self)
+
+    def leader(self):
+        return self.lane.get_leader(self)

@@ -34,3 +34,7 @@ class VehicleTest(TestCase):
     def test_should_get_follower_from_current_lane(self):
         when(self.lane).get_follower(self.vehicle).thenReturn(self.mock_vehicle)
         self.assertEqual(self.vehicle.follower(), self.mock_vehicle)
+
+    def test_should_get_leader_from_current_lane(self):
+        when(self.lane).get_leader(self.vehicle).thenReturn(self.mock_vehicle)
+        self.assertEqual(self.vehicle.leader(), self.mock_vehicle)
