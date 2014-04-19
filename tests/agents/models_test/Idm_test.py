@@ -39,6 +39,5 @@ class IdmTest(TestCase):
         acceleration = self.calculate_acceleration(self.vehicle, self.leader_nearby)
         self.assertAlmostEqual(acceleration, -2.056, places=3)
 
-    
     def calculate_acceleration(self, requester, leader):
         return requester._Vehicle__calculate_acceleration(leader)
