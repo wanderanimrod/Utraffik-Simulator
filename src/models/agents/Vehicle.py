@@ -1,8 +1,6 @@
 class Vehicle:
-    T = 1.67
-    delta = 4.0
+
     min_clearance = 1.0
-    lane_change_threshold = 0.1
 
     def __init__(self, vehicle_id, lane):
         self.id = vehicle_id

@@ -4,6 +4,8 @@ from models.traffic_models.idm import Idm
 
 class LaneChangeModel:
 
+    lane_change_threshold = 0.1
+
     def __init__(self):
         pass
 

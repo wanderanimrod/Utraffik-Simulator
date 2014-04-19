@@ -2,7 +2,9 @@ from models.agents.vehicle import Vehicle
 
 
 class Idm:
-
+    T = 1.67
+    delta = 4.0
+    
     def __init__(self):
         pass
 
@@ -15,5 +17,5 @@ class Idm:
         b = follower.desired_deceleration
         delta_v = v - leader.velocity
         s = leader.position - follower.position - leader.length
-        s_star = Vehicle.min_clearance + (v * Vehicle.T) + ((v * delta_v) / (2 * (a * b) ** 0.5))
-        return a * (1 - (v / follower.desired_velocity) ** Vehicle.delta - (s_star / s) ** 2)
+        s_star = Vehicle.min_clearance + (v * cls.T) + ((v * delta_v) / (2 * (a * b) ** 0.5))
+        return a * (1 - (v / follower.desired_velocity) ** cls.delta - (s_star / s) ** 2)
