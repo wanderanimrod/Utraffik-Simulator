@@ -8,13 +8,13 @@ class Vehicle:
         self.id = vehicle_id
         self.lane = lane
         self.lane.add_vehicle(self)
-        self.position = 0
-        self.velocity = 0
-        self.acceleration = 0
+        self.position = 0.0
+        self.velocity = 0.0
+        self.acceleration = 0.0
         self.desired_velocity = 33.3
         self.max_acceleration = 0.73
         self.desired_deceleration = 1.67
-        self.length = 5
+        self.length = 5.0
 
     # Variable names used as described in Wikipedia entry on IDM
     def __calculate_acceleration(self, leader):
