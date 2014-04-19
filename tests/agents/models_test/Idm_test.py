@@ -13,7 +13,7 @@ class IdmTest(TestCase):
         self.vehicle = Vehicle(0, self.lane)
         self.leader_far_away = VehicleFactory.make_dummy_leader()
         self.leader_nearby = VehicleFactory.make_dummy_leader()
-        self.leader_nearby.position = 6
+        self.leader_nearby.position = self.leader_nearby.length + 1
 
     def test_should_return_maximum_acceleration_if_leader_is_far_away(self):
         acceleration = self.calculate_acceleration(self.vehicle, self.leader_far_away)
