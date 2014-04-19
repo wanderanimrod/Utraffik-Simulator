@@ -24,5 +24,7 @@ class Vehicle:
         delta_v = v - leader.velocity
         s = leader.position - self.position - leader.length
         s_star = Vehicle.so + (v * Vehicle.T) + ((v * delta_v) / (2 * (a * b) ** 0.5))
-        acceleration = a * (1 - (v/self.desired_velocity)**Vehicle.delta - (s_star/s)**2)
-        return acceleration
+        try:
+            return a * (1 - (v/self.desired_velocity)**Vehicle.delta - (s_star/s)**2)
+        except ZeroDivisionError:
+            return 0.0
