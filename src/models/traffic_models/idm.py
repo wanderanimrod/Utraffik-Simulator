@@ -1,4 +1,4 @@
-from models.agents.vehicle import Vehicle
+from models.traffic_models.shared_constants import min_clearance
 
 
 class Idm:
@@ -17,5 +17,5 @@ class Idm:
         b = requester.desired_deceleration
         delta_v = v - leader.velocity
         s = leader.position - requester.position - leader.length
-        s_star = Vehicle.min_clearance + (v * cls.T) + ((v * delta_v) / (2 * (a * b) ** 0.5))
+        s_star = min_clearance + (v * cls.T) + ((v * delta_v) / (2 * (a * b) ** 0.5))
         return a * (1 - (v / requester.desired_velocity) ** cls.delta - (s_star / s) ** 2)

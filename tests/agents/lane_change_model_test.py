@@ -5,6 +5,7 @@ from mockito import when, mock
 from models.agents.vehicle import Vehicle
 from models.agents.vehicle_factory import VehicleFactory
 from models.traffic_models.lane_change_model import LaneChangeModel
+from models.traffic_models.shared_constants import min_clearance
 
 
 class LaneChangeModelTest(TestCase):
@@ -44,7 +45,7 @@ class LaneChangeModelTest(TestCase):
 
     def make_lane_change_scenario_with_little_clearance(self, leader):
         follower_nearby = VehicleFactory.make_dummy_follower()
-        follower_nearby.position = leader.position - leader.length + (Vehicle.min_clearance / 2)
+        follower_nearby.position = leader.position - leader.length + (min_clearance / 2)
         self.mock_prospective_follower(leader, follower_nearby)
         return leader
 

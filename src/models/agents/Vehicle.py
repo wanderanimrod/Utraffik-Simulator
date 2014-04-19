@@ -1,7 +1,5 @@
 class Vehicle:
 
-    min_clearance = 1.0
-
     def __init__(self, vehicle_id, lane):
         self.id = vehicle_id
         self.lane = lane

@@ -1,4 +1,4 @@
-from models.agents.vehicle_factory import VehicleFactory
+from models.traffic_models.shared_constants import dummy_leader, dummy_follower
 
 
 class Lane:
@@ -42,14 +42,14 @@ class Lane:
     def __get_leader_or_dummy(requester, vehicles):
         index_of_requester = vehicles.index(requester)
         if index_of_requester == 0:
-            return VehicleFactory.make_dummy_leader()
+            return dummy_leader
         return vehicles[index_of_requester - 1]
 
     @staticmethod
     def __get_follower_or_dummy(requester, vehicles):
         index_of_requester = vehicles.index(requester)
         if index_of_requester == len(vehicles) - 1:
-            return VehicleFactory.make_dummy_follower()
+            return dummy_follower
         return vehicles[index_of_requester + 1]
 
     @staticmethod

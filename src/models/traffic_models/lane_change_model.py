@@ -1,5 +1,5 @@
-from models.agents.vehicle import Vehicle
 from models.traffic_models.idm import Idm
+from models.traffic_models.shared_constants import min_clearance
 
 
 class LaneChangeModel:
@@ -12,7 +12,7 @@ class LaneChangeModel:
     @classmethod
     def vehicle_should_change_lane(cls, vehicle):
         if vehicle.acceleration < vehicle.max_acceleration:
-            if cls.__clearance_between(vehicle, vehicle.prospective_follower()) >= Vehicle.min_clearance:
+            if cls.__clearance_between(vehicle, vehicle.prospective_follower()) >= min_clearance:
                 follower = vehicle.follower()
                 # lane_change_incentive = vehicle.__calculate_lane_change_incentive(follower, prospective_follower)
                 return True
