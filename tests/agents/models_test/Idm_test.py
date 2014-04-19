@@ -39,7 +39,7 @@ class IdmTest(TestCase):
         acceleration = self.calculate_acceleration(self.vehicle, self.leader_nearby)
         self.assertAlmostEqual(acceleration, -2.056, places=3)
         
-    def test_should_not_throw_an_error_if_desired_velocity_of_vehicle_is_zero(self):
+    def test_should_not_accelerate_if_desired_velocity_of_vehicle_is_zero(self):
         self.vehicle.desired_velocity = 0.0
         acceleration = self.calculate_acceleration(self.vehicle, self.leader_far_away)
         self.assertEqual(acceleration, 0.0)

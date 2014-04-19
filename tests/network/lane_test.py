@@ -74,6 +74,10 @@ class LaneTest(TestCase):
         lane.insert_vehicle_at_current_position(middle_vehicle)
         self.assert_vehicles_are_in_order(lane.__dict__['_Lane__vehicles'])
 
+    # TODO Make sure it calls the parent_edge's get_next_lane method. Mocking
+    # def test_should_get_next_lane(self):
+    #     pass
+
     def assert_vehicles_are_in_order(self, vehicles):
         for follower in vehicles[1:]:
             leader = vehicles[vehicles.index(follower) - 1]
