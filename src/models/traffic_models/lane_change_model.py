@@ -12,8 +12,7 @@ class LaneChangeModel:
     @classmethod
     def vehicle_should_change_lane(cls, vehicle):
         if vehicle.acceleration < vehicle.max_acceleration:
-            target_lane = vehicle.lane.get_next_lane()
-            prospective_follower = target_lane.get_prospective_follower(vehicle)
+            prospective_follower = vehicle.prospective_follower()
             if cls.__clearance_from(vehicle, prospective_follower) >= Vehicle.min_clearance:
                 follower = vehicle.lane.get_follower(vehicle)
                 # lane_change_incentive = vehicle.__calculate_lane_change_incentive(follower, prospective_follower)

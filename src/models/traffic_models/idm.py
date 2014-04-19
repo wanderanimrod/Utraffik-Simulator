@@ -4,7 +4,7 @@ from models.agents.vehicle import Vehicle
 class Idm:
     T = 1.67
     delta = 4.0
-    
+
     def __init__(self):
         pass
 

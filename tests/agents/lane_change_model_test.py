@@ -12,7 +12,7 @@ class LaneChangeModelTest(TestCase):
     def setUp(self):
         self.lane = mock()
         self.target_lane = mock()
-        when(self.lane).get_next_lane().thenReturn(self.target_lane)
+        when(self.lane).next_lane().thenReturn(self.target_lane)
         self.vehicle = Vehicle(0, self.lane)
         self.vehicle_should_change_lane = LaneChangeModel.vehicle_should_change_lane
 

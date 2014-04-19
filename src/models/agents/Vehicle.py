@@ -14,3 +14,7 @@ class Vehicle:
         self.desired_deceleration = 1.67
         self.length = 5.0
         self.politeness = 0.5
+
+    def prospective_follower(self):
+        target_lane = self.lane.next_lane()
+        return target_lane.get_prospective_follower(self)
