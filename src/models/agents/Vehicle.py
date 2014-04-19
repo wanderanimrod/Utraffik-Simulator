@@ -18,3 +18,7 @@ class Vehicle:
     def prospective_follower(self):
         target_lane = self.lane.next_lane()
         return target_lane.get_prospective_follower(self)
+
+    def prospective_leader(self):
+        target_lane = self.lane.next_lane()
+        return target_lane.get_prospective_leader(self)
