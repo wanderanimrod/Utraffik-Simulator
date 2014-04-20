@@ -16,9 +16,6 @@ class LaneChangeModel:
             if cls.__clearance_between(vehicle, prospective_follower) >= min_clearance:
                 follower = vehicle.follower()
                 lane_change_incentive = cls.__calculate_lane_change_incentive(vehicle, follower, prospective_follower)
-                print "*" * 70
-                print lane_change_incentive
-                print "*" * 70
                 if lane_change_incentive > cls.lane_change_threshold:
                     return True
         return False
@@ -28,9 +25,6 @@ class LaneChangeModel:
         my_acc_gain = cls.__calculate_acceleration_gain(requester, requester.prospective_leader())
         prospective_follower_acc_gain = cls.__calculate_acceleration_gain(prospective_follower, requester)
         follower_acc_gain = cls.__calculate_acceleration_gain(follower, requester.leader())
-        print "*" * 70
-        print 'This guy was actually called'
-        print "*" * 70
         return my_acc_gain + requester.politeness * (prospective_follower_acc_gain + follower_acc_gain)
 
     @classmethod
