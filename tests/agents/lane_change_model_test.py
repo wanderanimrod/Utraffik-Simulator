@@ -20,7 +20,9 @@ class LaneChangeModelTest(TestCase):
     def test_should_okay_lane_change_if_acceleration_is_less_than_max_acceleration(self):
         vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
         self.put_acceleration_at_sub_optimal_level(vehicle)
-        self.assertTrue(self.vehicle_should_change_lane(vehicle))
+        lane_change_model = self.make_lane_change_incentive_high()
+        should_change_lane = lane_change_model.vehicle_should_change_lane(vehicle)
+        self.assertTrue(should_change_lane)
 
     def test_should_not_change_lane_if_acceleration_is_equal_to_max_acceleration(self):
         vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
@@ -39,15 +41,35 @@ class LaneChangeModelTest(TestCase):
     def test_should_not_okay_lane_change_if_lane_change_incentive_is_lower_than_lane_change_threshold(self):
         vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
         self.put_acceleration_at_sub_optimal_level(vehicle)
-        lane_change_model = self.make_lane_change_incentive_low()
+        lane_change_model = self.make_lane_change_incentive_low(vehicle)
         should_change_lane = lane_change_model.vehicle_should_change_lane(vehicle)
         self.assertFalse(should_change_lane)
 
-    def make_lane_change_incentive_low(self):
+    def test_should_stub_out_incentive(self):
+        vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
+        lane_change_model = self.make_lane_change_incentive_low(vehicle)
+        incentive = self.get_lane_change_incentive(lane_change_model, vehicle)
+        self.assertEqual(incentive, 0.05)
+
+    def get_lane_change_incentive(self, model, requester):
+        return  model._LaneChangeModel____calculate_lane_change_incentive(
+            requester, requester.follower(), requester.prospective_follower()
+        )
+
+    def make_lane_change_incentive_low(self, requester):
         lane_change_model_spy = spy(LaneChangeModel)
-        print lane_change_model_spy
         low_incentive = LaneChangeModel.lane_change_threshold / 2.0
-        when(lane_change_model_spy)._LaneChangeModel____calculate_lane_change_incentive().thenReturn(low_incentive)
+        when(lane_change_model_spy)._LaneChangeModel____calculate_lane_change_incentive(
+            requester, requester.follower(), requester.prospective_follower()
+        ).thenReturn(low_incentive)
+        return lane_change_model_spy
+
+    def make_lane_change_incentive_high(self, requester):
+        lane_change_model_spy = spy(LaneChangeModel)
+        high_incentive = LaneChangeModel.lane_change_threshold * 2
+        when(lane_change_model_spy)._LaneChangeModel____calculate_lane_change_incentive(
+            requester, requester.follower(), requester.prospective_follower()
+        ).thenReturn(high_incentive)
         return lane_change_model_spy
 
     def make_lane_change_scenario_with_ample_clearance_for(self, requester):
