@@ -4,7 +4,7 @@ from models.traffic_models.shared_constants import min_clearance
 
 class LaneChangeModel:
 
-    lane_change_threshold = 0.1
+    __lane_change_threshold = 0.1
 
     def __init__(self):
         pass
@@ -16,7 +16,7 @@ class LaneChangeModel:
             if cls.__clearance_between(vehicle, prospective_follower) >= min_clearance:
                 follower = vehicle.follower()
                 lane_change_incentive = cls.__calculate_lane_change_incentive(vehicle, follower, prospective_follower)
-                if lane_change_incentive > cls.lane_change_threshold:
+                if lane_change_incentive > cls.__lane_change_threshold:
                     return True
         return False
 

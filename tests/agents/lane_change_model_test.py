@@ -20,29 +20,17 @@ class LaneChangeModelTest(TestCase):
         should_change_lane = LaneChangeModel.vehicle_should_change_lane(vehicle)
         self.assertTrue(should_change_lane)
 
-    def make_lane_change_incentive_high(self, requester):
-        requester.politeness = 0.0
-        requester.position = 100
-        blocker_nearby = VehicleFactory.make_dummy_follower()
-        blocker_nearby.position = requester.position + 3
-        follower_nearby = VehicleFactory.make_dummy_leader()
-        follower_nearby.position = requester.position - requester.length + (min_clearance / 2)
-        prospective_leader_far_away = VehicleFactory.make_dummy_leader()
-        when(requester).leader().thenReturn(blocker_nearby)
-        when(requester).prospective_leader().thenReturn(prospective_leader_far_away)
-        when(requester).prospective_follower().thenReturn(VehicleFactory.make_dummy_follower())
-        when(requester).follower().thenReturn(follower_nearby)
-        return requester
-
-    def test_should_not_change_lane_if_acceleration_is_equal_to_max_acceleration(self):
-        vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
+    def test_should_not_okay_lane_change_if_acceleration_is_equal_to_max_acceleration(self):
+        vehicle = self.make_lane_change_incentive_high(self.vehicle)
+        self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
         vehicle.acceleration = vehicle.max_acceleration
         should_change_lane = LaneChangeModel.vehicle_should_change_lane(vehicle)
         self.assertFalse(should_change_lane)
 
     def test_should_not_okay_lane_change_if_clearance_from_prospective_follower_will_not_be_enough(self):
-        vehicle = self.make_lane_change_scenario_with_little_clearance_for(self.vehicle)
+        vehicle = self.make_lane_change_incentive_high(self.vehicle)
         self.put_acceleration_at_sub_optimal_level(vehicle)
+        self.make_lane_change_scenario_with_little_clearance_for(vehicle)
         should_change_lane = LaneChangeModel.vehicle_should_change_lane(vehicle)
         self.assertFalse(should_change_lane)
 
@@ -59,21 +47,33 @@ class LaneChangeModelTest(TestCase):
         should_change_lane = lane_change_model.vehicle_should_change_lane(vehicle)
         self.assertFalse(should_change_lane)
 
-    def test_should_stub_out_incentive(self):
-        vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
-        lane_change_model = self.make_lane_change_incentive_low(vehicle)
-        incentive = self.get_lane_change_incentive(lane_change_model, vehicle)
-        self.assertEqual(incentive, 0.05)
+    def test_should_okay_lane_change_if_all_other_factors_allow_for_it(self):
+        vehicle = self.make_lane_change_incentive_high(self.vehicle)
+        self.make_lane_change_scenario_with_ample_clearance_for(vehicle)
+        self.put_acceleration_at_sub_optimal_level(vehicle)
+        should_change_lane = LaneChangeModel.vehicle_should_change_lane(vehicle)
+        self.assertTrue(should_change_lane)
 
-    def get_lane_change_incentive(self, model, requester):
-        return  model._LaneChangeModel____calculate_lane_change_incentive(
-            requester, requester.follower(), requester.prospective_follower()
-        )
+    def make_lane_change_incentive_high(self, requester):
+        requester.politeness = 0.0
+        requester.position = 100
+        blocker_nearby = VehicleFactory.make_dummy_follower()
+        blocker_nearby.position = requester.position + 3
+        follower_nearby = VehicleFactory.make_dummy_leader()
+        follower_nearby.position = requester.position - requester.length + (min_clearance / 2)
+        prospective_leader_far_away = VehicleFactory.make_dummy_leader()
+        when(requester).leader().thenReturn(blocker_nearby)
+        when(requester).prospective_leader().thenReturn(prospective_leader_far_away)
+        when(requester).prospective_follower().thenReturn(VehicleFactory.make_dummy_follower())
+        when(requester).follower().thenReturn(follower_nearby)
+        self.assertGreater(LaneChangeModel._LaneChangeModel__calculate_lane_change_incentive,
+                           LaneChangeModel._LaneChangeModel__lane_change_threshold)
+        return requester
 
     # TODO Refactor these helper methods to a more civilised size and re-usability
     def make_lane_change_incentive_low(self, requester):
         lane_change_model_spy = spy(LaneChangeModel)
-        low_incentive = LaneChangeModel.lane_change_threshold / 2.0
+        low_incentive = LaneChangeModel._LaneChangeModel__lane_change_threshold / 2.0
         when(lane_change_model_spy)._LaneChangeModel____calculate_lane_change_incentive(
             requester, requester.follower(), requester.prospective_follower()
         ).thenReturn(low_incentive)
