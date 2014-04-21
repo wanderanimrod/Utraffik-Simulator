@@ -12,8 +12,6 @@ class VehicleTest(TestCase):
         # TODO Fix this mocking stuff. Mockito is fake.
         # pass
 
-    # TODO Test that it delegate next_lane function to it lane
-
     def setUp(self):
         self.lane = mock()
         self.target_lane = mock()
@@ -42,6 +40,16 @@ class VehicleTest(TestCase):
 
     def test_should_update_velocity_after_translate_using_first_equation_of_motion(self):
         self.vehicle.velocity = 12
-        when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(0.5)
+        self.fix_idm_acceleration(0.5)
         self.vehicle.translate(100)
         self.assertEqual(self.vehicle.velocity, 62)
+
+    def test_should_update_position_after_translate_using_second_equation_of_motion(self):
+        self.fix_idm_acceleration(0.5)
+        self.vehicle.velocity = 10
+        self.vehicle.position = 10.0
+        self.vehicle.translate(10)
+        self.assertEqual(self.vehicle.position, 135.0)
+
+    def fix_idm_acceleration(self, acceleration):
+        when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
