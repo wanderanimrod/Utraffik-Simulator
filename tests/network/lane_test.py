@@ -1,4 +1,5 @@
 from unittest import TestCase
+from mockito import mock
 from models.agents.vehicle import Vehicle
 from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
@@ -7,8 +8,8 @@ from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 class LaneTest(TestCase):
 
     def setUp(self):
-        self.lane = self.make_lane()
-        self.adjacent_lane = self.make_lane(lane_id=1)
+        self.lane = Lane(0, mock())
+        self.adjacent_lane = Lane(1, mock())
 
     # def test_should_add_itself_to_edge_upon_instantiation(self):
     #     add_lane_stub = Mock(TwoLaneOneWayEdge.add_lane)
@@ -16,8 +17,8 @@ class LaneTest(TestCase):
         # add_lane_stub.assert_called_once_with(self.lane)
 
     def test_should_equate_lanes_by_id(self):
-        lane_1 = self.make_lane(lane_id=1)
-        lane_2 = self.make_lane(lane_id=1)
+        lane_1 = Lane(1, mock())
+        lane_2 = Lane(1, mock())
         self.assertEqual(lane_1, lane_2)
 
     def test_should_add_vehicle_to_itself(self):
@@ -97,10 +98,6 @@ class LaneTest(TestCase):
         vehicle_joining = Vehicle(1, self.adjacent_lane)
         vehicle_joining.position = 20
         return prospective_leader, vehicle_joining, prospective_follower
-
-    def make_lane(self, lane_id=0):
-        edge = TwoLaneOneWayEdge(0)
-        return Lane(lane_id, edge)
 
     def assert_is_dummy_leader(self, vehicle):
         self.assertEqual(vehicle.position, 100000)
