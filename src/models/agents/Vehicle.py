@@ -26,3 +26,10 @@ class Vehicle:
 
     def leader(self):
         return self.lane.get_leader(self)
+
+    def translate(self, t):
+        u = self.velocity
+        self.acceleration = Idm.calculate_acceleration(self, self.leader())
+        s = u*t + 0.5*(self.acceleration*(t**2))
+        self.position += s
+        self.velocity = u + self.acceleration*t

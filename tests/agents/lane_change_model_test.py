@@ -70,6 +70,7 @@ class LaneChangeModelTest(TestCase):
             requester, requester.follower(), requester.prospective_follower()
         )
 
+    # TODO Refactor these helper methods to a more civilised size and re-usability
     def make_lane_change_incentive_low(self, requester):
         lane_change_model_spy = spy(LaneChangeModel)
         low_incentive = LaneChangeModel.lane_change_threshold / 2.0
