@@ -10,25 +10,23 @@ class LaneChangeModel:
         pass
 
     @classmethod
-    def vehicle_should_change_lane(cls, vehicle):
-        if vehicle.acceleration < vehicle.max_acceleration:
-            prospective_follower = vehicle.prospective_follower()
-            if cls.__clearance_between(vehicle, prospective_follower) >= min_clearance:
-                follower = vehicle.follower()
-                lane_change_incentive = cls.__calculate_lane_change_incentive(vehicle, follower, prospective_follower)
-                if lane_change_incentive > cls.__lane_change_threshold:
+    def vehicle_should_change_lane(cls, requester):
+        if requester.acceleration < requester.max_acceleration:
+            if cls.__clearance_between(requester, requester.prospective_follower()) >= min_clearance:
+                incentive = cls.__calculate_lane_change_incentive(requester)
+                if incentive > cls.__lane_change_threshold:
                     return True
         return False
 
     @classmethod
-    def __calculate_lane_change_incentive(cls, requester, follower, prospective_follower):
-        my_acc_gain = cls.__calculate_acceleration_gain(requester, requester.prospective_leader())
-        prospective_follower_acc_gain = cls.__calculate_acceleration_gain(prospective_follower, requester)
-        follower_acc_gain = cls.__calculate_acceleration_gain(follower, requester.leader())
-        return my_acc_gain + requester.politeness * (prospective_follower_acc_gain + follower_acc_gain)
+    def __calculate_lane_change_incentive(cls, requester):
+        requester_acc_gain = cls.__acc_delta_for(requester, requester.prospective_leader())
+        prospective_follower_acc_loss = cls.__acc_delta_for(requester.prospective_follower(), requester)
+        follower_acc_gain = cls.__acc_delta_for(requester.follower(), requester.leader())
+        return requester_acc_gain + requester.politeness * (prospective_follower_acc_loss + follower_acc_gain)
 
     @classmethod
-    def __calculate_acceleration_gain(cls, gainer, leader):
+    def __acc_delta_for(cls, gainer, leader):
         acceleration_before = gainer.acceleration
         acceleration_after = Idm.calculate_acceleration(gainer, leader)
         return acceleration_after - acceleration_before

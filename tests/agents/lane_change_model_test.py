@@ -43,8 +43,7 @@ class LaneChangeModelTest(TestCase):
     def test_should_not_okay_lane_change_if_lane_change_incentive_is_lower_than_lane_change_threshold(self):
         vehicle = self.make_lane_change_scenario_with_ample_clearance_for(self.vehicle)
         self.put_acceleration_at_sub_optimal_level(vehicle)
-        lane_change_model = self.make_lane_change_incentive_low(vehicle)
-        should_change_lane = lane_change_model.vehicle_should_change_lane(vehicle)
+        should_change_lane = LaneChangeModel.vehicle_should_change_lane(vehicle)
         self.assertFalse(should_change_lane)
 
     def test_should_okay_lane_change_if_all_other_factors_allow_for_it(self):
@@ -69,15 +68,6 @@ class LaneChangeModelTest(TestCase):
         self.assertGreater(LaneChangeModel._LaneChangeModel__calculate_lane_change_incentive,
                            LaneChangeModel._LaneChangeModel__lane_change_threshold)
         return requester
-
-    # TODO Refactor these helper methods to a more civilised size and re-usability
-    def make_lane_change_incentive_low(self, requester):
-        lane_change_model_spy = spy(LaneChangeModel)
-        low_incentive = LaneChangeModel._LaneChangeModel__lane_change_threshold / 2.0
-        when(lane_change_model_spy)._LaneChangeModel____calculate_lane_change_incentive(
-            requester, requester.follower(), requester.prospective_follower()
-        ).thenReturn(low_incentive)
-        return lane_change_model_spy
 
     def make_lane_change_scenario_with_ample_clearance_for(self, requester):
         requester.position = 100
