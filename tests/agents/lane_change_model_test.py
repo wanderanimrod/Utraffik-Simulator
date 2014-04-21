@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from mockito import when, mock, spy
+from mockito import when, mock
 
 from models.agents.vehicle import Vehicle
 from models.agents.vehicle_factory import VehicleFactory
