@@ -3,6 +3,7 @@ from unittest import TestCase
 from mockito import mock, when
 
 from models.agents.vehicle import Vehicle
+from models.traffic_models.idm import Idm
 
 
 class VehicleTest(TestCase):
@@ -38,3 +39,9 @@ class VehicleTest(TestCase):
     def test_should_get_leader_from_current_lane(self):
         when(self.lane).get_leader(self.vehicle).thenReturn(self.mock_vehicle)
         self.assertEqual(self.vehicle.leader(), self.mock_vehicle)
+
+    def test_should_update_velocity_after_translate_using_first_equation_of_motion(self):
+        self.vehicle.velocity = 12
+        when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(0.5)
+        self.vehicle.translate(100)
+        self.assertEqual(self.vehicle.velocity, 62)

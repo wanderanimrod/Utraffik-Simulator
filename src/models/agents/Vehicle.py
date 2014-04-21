@@ -1,3 +1,5 @@
+from models.traffic_models.idm import Idm
+
 class Vehicle:
 
     def __init__(self, vehicle_id, lane):

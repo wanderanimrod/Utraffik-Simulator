@@ -19,3 +19,7 @@ class VehicleFactory:
         follower = Vehicle(-2, mock())
         follower.desired_velocity = 0
         return follower
+
+
+dummy_leader = VehicleFactory.make_dummy_leader()
+dummy_follower = VehicleFactory.make_dummy_follower()

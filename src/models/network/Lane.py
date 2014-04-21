@@ -1,4 +1,4 @@
-from models.traffic_models.shared_constants import dummy_leader, dummy_follower
+from models.agents.vehicle_factory import dummy_leader, dummy_follower
 
 
 class Lane:
