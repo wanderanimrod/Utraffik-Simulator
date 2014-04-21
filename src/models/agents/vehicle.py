@@ -32,7 +32,8 @@ class Vehicle:
 
     def translate(self, t):
         u = self.velocity
-        self.acceleration = Idm.calculate_acceleration(self, self.leader())
-        s = u*t + 0.5*(self.acceleration*(t**2))
+        a = Idm.calculate_acceleration(self, self.leader())
+        s = u*t + 0.5*(a*(t**2))
         self.position += s
-        self.velocity = u + self.acceleration*t
+        self.velocity = u + a*t
+        self.acceleration = a

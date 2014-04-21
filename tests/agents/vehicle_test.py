@@ -51,5 +51,10 @@ class VehicleTest(TestCase):
         self.vehicle.translate(10)
         self.assertEqual(self.vehicle.position, 135.0)
 
+    def test_should_update_acceleration_after_translate_to_acceleration_returned_by_idm(self):
+        self.fix_idm_acceleration(0.6)
+        self.vehicle.translate(10)
+        self.assertEqual(self.vehicle.acceleration, 0.6)
+
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
