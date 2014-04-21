@@ -1,4 +1,5 @@
 from unittest import TestCase
+from mockito import mock
 from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 
@@ -16,7 +17,8 @@ class TwoLaneOneWayEdgeTest(TestCase):
 
     def test_should_add_lane_to_itself(self):
         edge = TwoLaneOneWayEdge(0)
-        lane = Lane(0, edge)
+        lane = mock()
+        edge.add_lane(lane)
         self.assertEquals(edge.first_lane, lane)
 
     def test_should_add_two_lanes_to_itself(self):

@@ -22,7 +22,8 @@ class LaneTest(TestCase):
         self.assertEqual(lane_1, lane_2)
 
     def test_should_add_vehicle_to_itself(self):
-        vehicle = Vehicle(0, self.lane)
+        vehicle = mock()
+        self.lane.add_vehicle(vehicle)
         self.assertTrue(self.lane.__dict__['_Lane__vehicles'].__contains__(vehicle))
 
     def test_should_remove_vehicle_from_self(self):
