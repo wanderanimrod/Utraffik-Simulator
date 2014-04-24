@@ -1,4 +1,5 @@
 from models.traffic_models.idm import Idm
+from models.traffic_models.lane_change_model import LaneChangeModel
 
 
 class Vehicle:
@@ -37,3 +38,11 @@ class Vehicle:
         self.position += s
         self.velocity = u + a*t
         self.acceleration = a
+        self.__change_lane_if_necessary()
+
+    def __change_lane_if_necessary(self):
+        if LaneChangeModel.vehicle_should_change_lane(self):
+            target_lane = self.lane.next_lane()
+            target_lane.insert_vehicle_at_current_position(self)
+            self.lane = target_lane
+            self.lane.remove_vehicle(self)
