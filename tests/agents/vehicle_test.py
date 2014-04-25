@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from mockito import mock, when, verify
+from mockito import mock, when, verify, never
 
 from models.agents.vehicle import Vehicle
 from models.agents.vehicle_factory import dummy_leader
@@ -59,22 +59,28 @@ class VehicleTest(TestCase):
         self.assertEqual(self.vehicle.acceleration, 0.6)
 
     def test_should_change_lane_after_translate_if_lane_change_is_okay(self):
-        vehicle, new_lane, _ = self.translate_and_change_lane(self.vehicle)
+        vehicle, new_lane, _ = self.translate(self.vehicle, change_lane=True)
         self.assertEqual(vehicle.lane, new_lane)
 
     def test_should_remove_itself_from_current_lane_after_lane_change(self):
-        vehicle, _, old_lane = self.translate_and_change_lane(self.vehicle)
+        vehicle, _, old_lane = self.translate(self.vehicle, change_lane=True)
         verify(old_lane).remove_vehicle(vehicle)
 
     def test_should_add_itself_to_target_lane_after_lane_change(self):
-        vehicle, new_lane, _ = self.translate_and_change_lane(self.vehicle)
+        vehicle, new_lane, _ = self.translate(self.vehicle, change_lane=True)
         verify(new_lane).insert_vehicle_at_current_position(vehicle)
+
+    def test_should_not_change_lanes_if_no_lane_change_occurred_during_translate(self):
+        vehicle, new_lane, old_lane = self.translate(self.vehicle, change_lane=False)
+        verify(new_lane, never).insert_vehicle_at_current_position(vehicle)
+        verify(old_lane, never).remove_vehicle(vehicle)
+        self.assertEqual(vehicle.lane, old_lane)
 
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
 
-    def translate_and_change_lane(self, vehicle):
-        when(LaneChangeModel).vehicle_should_change_lane(vehicle).thenReturn(True)
+    def translate(self, vehicle, change_lane=None):
+        when(LaneChangeModel).vehicle_should_change_lane(vehicle).thenReturn(change_lane)
         when(vehicle).leader().thenReturn(dummy_leader)
-        self.vehicle.translate(1)
+        vehicle.translate(1)
         return vehicle, self.target_lane, self.lane
