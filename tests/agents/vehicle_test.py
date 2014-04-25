@@ -3,10 +3,9 @@ from unittest import TestCase
 from mockito import mock, when, verify
 
 from models.agents.vehicle import Vehicle
-from models.agents.vehicle_factory import dummy_leader, dummy_follower
+from models.agents.vehicle_factory import dummy_leader
 from models.traffic_models.idm import Idm
 from models.traffic_models.lane_change_model import LaneChangeModel
-from tests.helper import BetterMock, spy_on, expect
 
 
 class VehicleTest(TestCase):
@@ -42,10 +41,6 @@ class VehicleTest(TestCase):
         self.assertEqual(self.vehicle.leader(), self.mock_vehicle)
 
     def test_should_update_velocity_after_translate_using_first_equation_of_motion(self):
-        # when(self.vehicle).leader().thenReturn(dummy_leader)
-        # when(self.vehicle).follower().thenReturn(dummy_follower)
-        # when(self.vehicle).prospective_follower().thenReturn(dummy_follower)
-        # when(self.vehicle).prospective_leader().thenReturn(dummy_leader)
         self.vehicle.velocity = 12
         self.fix_idm_acceleration(0.5)
         self.vehicle.translate(100)
@@ -68,36 +63,12 @@ class VehicleTest(TestCase):
         self.assertEqual(vehicle.lane, new_lane)
 
     def test_should_remove_itself_from_current_lane_after_lane_change(self):
-        pass
-
-    def dummy_function(self, car):
-        print "DUMMY CALLED"
-        print car
+        vehicle, _, old_lane = self.translate_and_change_lane(self.vehicle)
+        verify(old_lane).remove_vehicle(vehicle)
 
     def test_should_add_itself_to_target_lane_after_lane_change(self):
         vehicle, new_lane, _ = self.translate_and_change_lane(self.vehicle)
-        verify(new_lane).add_vehicle(vehicle)
-
-    def test_should_sth(self):
-        lane = BetterMock()
-        target_lane = BetterMock()
-        spy_on(lane, 'next_lane').and_return(target_lane)
-        vehicle = Vehicle(0, lane)
-        vehicle.leader = lambda: dummy_leader
-        vehicle.prospective_leader = lambda: dummy_leader
-        vehicle.prospective_follower = lambda: dummy_follower
-        vehicle.follower = lambda: dummy_follower
-        lane_change_model = BetterMock()
-        spy_on(lane_change_model, 'vehicle_should_change_lane').and_return(True)
-        vehicle.translate(1)
-        expect(lane, 'add_vehicle').to_have_been_called_with(vehicle)
-        pass
-
-    def test_should_verify(self):
-        # lane = MyMock()
-        # vehicle = Vehicle(lane)
-        # verify(lane).remove_vehicle(self.vehicle)
-        pass
+        verify(new_lane).insert_vehicle_at_current_position(vehicle)
 
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
