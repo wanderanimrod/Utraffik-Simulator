@@ -1,5 +1,5 @@
 from unittest import TestCase
-from mockito import mock
+from mockito import mock, verify
 from models.agents.vehicle import Vehicle
 from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
@@ -8,13 +8,13 @@ from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 class LaneTest(TestCase):
 
     def setUp(self):
-        self.lane = Lane(0, mock())
-        self.adjacent_lane = Lane(1, mock())
+        self.edge = mock()
+        self.lane = Lane(0, self.edge)
+        self.adjacent_lane = Lane(1, self.edge)
 
-    # def test_should_add_itself_to_edge_upon_instantiation(self):
-    #     add_lane_stub = Mock(TwoLaneOneWayEdge.add_lane)
-        # TODO Check that add_lane is called on parent edge
-        # add_lane_stub.assert_called_once_with(self.lane)
+    def test_should_add_itself_to_edge_upon_instantiation(self):
+        lane = Lane(0, self.edge)
+        verify(self.edge).add_lane(lane)
 
     def test_should_equate_lanes_by_id(self):
         lane_1 = Lane(1, mock())
