@@ -3,7 +3,7 @@ from unittest import TestCase
 from mockito import mock
 
 from models.agents.vehicle import Vehicle
-from models.agents.vehicle_factory import VehicleFactory
+from models.agents.vehicle_factory import make_dummy_leader
 from models.traffic_models.idm import Idm
 
 
@@ -12,8 +12,8 @@ class IdmTest(TestCase):
     def setUp(self):
         self.lane = mock()
         self.vehicle = Vehicle(0, self.lane)
-        self.leader_far_away = VehicleFactory.make_dummy_leader()
-        self.leader_nearby = VehicleFactory.make_dummy_leader()
+        self.leader_far_away = make_dummy_leader()
+        self.leader_nearby = make_dummy_leader()
         self.leader_nearby.position = self.leader_nearby.length + 1
 
     def test_should_return_maximum_acceleration_if_leader_is_far_away(self):
