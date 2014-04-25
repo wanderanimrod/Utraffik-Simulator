@@ -25,19 +25,19 @@ class VehicleTest(TestCase):
         verify(self.lane).add_vehicle(vehicle)
 
     def test_should_get_prospective_follower_from_target_lane(self):
-        when(self.vehicle).prospective_follower().thenReturn(self.mock_vehicle)
+        when(self.target_lane).get_prospective_follower(self.vehicle).thenReturn(self.mock_vehicle)
         self.assertEqual(self.vehicle.prospective_follower(), self.mock_vehicle)
 
     def test_should_get_prospective_leader_from_target_lane(self):
-        when(self.vehicle).prospective_leader().thenReturn(self.mock_vehicle)
+        when(self.target_lane).get_prospective_leader(self.vehicle).thenReturn(self.mock_vehicle)
         self.assertEqual(self.vehicle.prospective_leader(), self.mock_vehicle)
 
     def test_should_get_follower_from_current_lane(self):
-        when(self.vehicle).follower().thenReturn(self.mock_vehicle)
+        when(self.lane).get_follower(self.vehicle).thenReturn(self.mock_vehicle)
         self.assertEqual(self.vehicle.follower(), self.mock_vehicle)
 
     def test_should_get_leader_from_current_lane(self):
-        when(self.vehicle).leader().thenReturn(self.mock_vehicle)
+        when(self.lane).get_leader(self.vehicle).thenReturn(self.mock_vehicle)
         self.assertEqual(self.vehicle.leader(), self.mock_vehicle)
 
     def test_should_update_velocity_after_translate_using_first_equation_of_motion(self):
