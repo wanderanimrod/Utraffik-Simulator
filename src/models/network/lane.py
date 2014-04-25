@@ -12,7 +12,6 @@ class Lane:
         return self.id == other.id
 
     def add_vehicle(self, vehicle):
-        print "*" * 70; print "removed vehicle from lane"; print "*" * 70
         self.__vehicles.append(vehicle)
 
     def remove_vehicle(self, vehicle):
