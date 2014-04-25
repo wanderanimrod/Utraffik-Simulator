@@ -9,7 +9,11 @@ class BetterMock:
             return self.record_call(attr_name, *args)
         return relay_call
 
+    def __repr__(self):
+        return "BetterMock"
+
     def record_call(self, method_name, *args):
+        # print "*" * 70; print "Called %s with args %s" % (method_name, str(args)); print "*" * 70
         call = Call(method_name, args=list(args))
         self.calls.append(call)
         result = self.__stubbed_result_or_none(call)
@@ -26,6 +30,7 @@ class BetterMock:
             call_index = self.calls.index(call_matcher)
             return self.calls[call_index]
         except ValueError:
+            print "*" * 70; print "got a value error"; print "*" * 70
             return None
 
     def __stubbed_result_or_none(self, call):
@@ -74,7 +79,8 @@ class Invokable:
         self.mock.stub_method(self.method_name, value)
 
     def __get_relevant_call_from_mock(self, method_name):
-        call_found = self.mock.get_call_to(method_name) or None
+        # print "*" * 70; print self.mock.get_call_to(method_name); print method_name; print "*" * 70
+        call_found = self.mock.get_call_to(method_name)
         if not call_found:
             raise MethodNotCalledError('Method "%s" was not called on object' % method_name)
         return call_found
@@ -84,8 +90,26 @@ def expect(mock_object, method_name):
     return Invokable(mock_object, method_name)
 
 
-def spy_on(mock_object, method):
-    return Invokable(mock_object, method)
+def spy_on(obj, method):
+    if isinstance(obj, BetterMock):
+        return Invokable(obj, method)
+    else:
+        return __stub_method_on_real_object(obj, method)
+
+
+def __stub_method_on_real_object(obj, method_name):
+    def modify_object():
+        obj.and_return = and_return
+        return obj
+
+    def and_return(value):
+        def fix_return_value():
+            return value
+        obj.__dict__[method_name] = fix_return_value
+        return obj
+
+    modify_object()
+    return obj
 
 
 class ArgumentsMissingError(Exception):
