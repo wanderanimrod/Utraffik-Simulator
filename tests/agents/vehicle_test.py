@@ -10,10 +10,6 @@ from models.traffic_models.lane_change_model import LaneChangeModel
 
 class VehicleTest(TestCase):
 
-    # def test_should_add_itself_to_parent_lane_upon_instantiation(self):
-    # TODO Fix this mocking stuff. Mockito is fake.
-    # pass
-
     def setUp(self):
         self.lane = mock()
         self.target_lane = mock()
@@ -23,6 +19,10 @@ class VehicleTest(TestCase):
 
     def test_should_be_created_with_position_zero(self):
         self.assertEqual(self.vehicle.position, 0)
+
+    def test_should_add_itself_to_parent_lane_upon_instantiation(self):
+        vehicle = Vehicle(0, self.lane)
+        verify(self.lane).add_vehicle(vehicle)
 
     def test_should_get_prospective_follower_from_target_lane(self):
         when(self.vehicle).prospective_follower().thenReturn(self.mock_vehicle)
