@@ -8,7 +8,7 @@ The simulation loop (equivalent to a game loop) with an event dispatcher should 
 dispatch them to an appropriate queue for the target process of that kind of event
 
 
-### Sensors and other domain-based data sim users
+### Sensors and other domain-based sim data consumers
 
 Vehicles send snapshots of themselves along with a translate event. The snapshot will form part of the event data. Other
 data points will be when the event occurred (in sim time) so that the handling of the events doesn't have to be restricted
@@ -28,8 +28,8 @@ assignment is as follows (each bullet with a process):
 - Sensors and reporting to external consumers
 - Traffic data listener for vehicles (data coming from another service)
 
-Then, we should distribute the translation of vehicles among about __4__ processes. Translation should be based on lanes and
-not vehicles so we avoid sharing state between processes.
+Then, we should distribute the translation of vehicles among about __4 processes__. Translation should be based on edges
+and not vehicles or lanes so we avoid sharing state between processes.
 
 
 
