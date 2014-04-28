@@ -35,10 +35,19 @@ class Vehicle:
         u = self.velocity
         a = Idm.calculate_acceleration(self, self.leader())
         s = u*t + 0.5*(a*(t**2))
-        self.position += s
+        self.__update_position_if_still_on_lane(s)
         self.velocity = u + a*t
         self.acceleration = a
         self.__change_lane_if_necessary()
+
+    def __update_position_if_still_on_lane(self, displacement):
+        new_position = self.position + displacement
+        if new_position <= self.lane.length:
+            self.position = new_position
+        else:
+            self.lane.remove_vehicle(self)
+            self.position = 0
+            self.lane = None
 
     def __change_lane_if_necessary(self):
         if LaneChangeModel.vehicle_should_change_lane(self):

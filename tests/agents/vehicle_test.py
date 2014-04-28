@@ -76,11 +76,19 @@ class VehicleTest(TestCase):
         verify(old_lane, never).remove_vehicle(vehicle)
         self.assertEqual(vehicle.lane, old_lane)
 
+    def test_should_remove_itself_from_current_lane_if_next_translation_would_put_it_off_the_lane(self):
+        # Note: Will cause vehicles to jump from one lane the next
+        self.lane.length = 10
+        vehicle, _, lane = self.translate(self.vehicle, change_lane=False, time_delta=10)
+        verify(lane).remove_vehicle(vehicle)
+        self.assertEqual(vehicle.position, 0)
+        self.assertEqual(vehicle.lane, None)
+
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
 
-    def translate(self, vehicle, change_lane=None):
+    def translate(self, vehicle, change_lane=None, time_delta=1):
         when(LaneChangeModel).vehicle_should_change_lane(vehicle).thenReturn(change_lane)
         when(vehicle).leader().thenReturn(dummy_leader)
-        vehicle.translate(1)
+        vehicle.translate(time_delta)
         return vehicle, self.target_lane, self.lane
