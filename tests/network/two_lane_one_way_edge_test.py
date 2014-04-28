@@ -7,7 +7,7 @@ from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 class TwoLaneOneWayEdgeTest(TestCase):
 
     def setUp(self):
-        self.edge = TwoLaneOneWayEdge(0)
+        self.edge = TwoLaneOneWayEdge(0, 100)
         self.first_lane = Lane(0, self.edge)
         self.second_lane = Lane(1, self.edge)
 
@@ -16,7 +16,7 @@ class TwoLaneOneWayEdgeTest(TestCase):
         self.assertEquals(self.edge.lane_next_to(self.second_lane), self.first_lane)
 
     def test_should_add_lane_to_itself(self):
-        edge = TwoLaneOneWayEdge(0)
+        edge = TwoLaneOneWayEdge(0, 100)
         lane = mock()
         edge.add_lane(lane)
         self.assertEquals(edge.first_lane, lane)

@@ -6,6 +6,7 @@ class Lane:
         self.id = lane_id
         self.__parent_edge = edge
         self.__parent_edge.add_lane(self)
+        self.length = edge.length
         self.__vehicles = []
 
     def __eq__(self, other):

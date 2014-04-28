@@ -1,9 +1,10 @@
 class TwoLaneOneWayEdge:
 
-    def __init__(self, edge_id):
+    def __init__(self, edge_id, length):
         self.id = edge_id
         self.first_lane = None
         self.second_lane = None
+        self.length = length
 
     def lane_next_to(self, lane):
         if lane == self.first_lane:

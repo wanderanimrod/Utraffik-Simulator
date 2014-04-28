@@ -80,6 +80,11 @@ class LaneTest(TestCase):
         self.lane.next_lane()
         verify(self.edge).lane_next_to(self.lane)
 
+    def test_length_of_lane_should_be_length_of_parent_edge(self):
+        edge = TwoLaneOneWayEdge(0, 100)
+        lane = Lane(0, edge)
+        self.assertEqual(lane.length, edge.length)
+
     def assert_vehicles_are_in_order(self, vehicles):
         for follower in vehicles[1:]:
             leader = vehicles[vehicles.index(follower) - 1]
