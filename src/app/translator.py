@@ -22,7 +22,3 @@ class Translator:
     def __check_translation_load(self):
         if len(self.__translatables) == 0:
             E_TRANSLATOR_WAITING.send(sender=self)
-            pass
-
-    def waiting(self):
-        return len(self.__translatables) == 0
