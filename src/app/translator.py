@@ -20,5 +20,5 @@ class Translator:
         return vehicles
 
     def __check_translation_load(self):
-        if len(self.__translatables) == 0:
+        if not len(self.__translatables):
             E_TRANSLATOR_WAITING.send(sender=self)
