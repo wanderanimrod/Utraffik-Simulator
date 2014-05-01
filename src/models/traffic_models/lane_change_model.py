@@ -2,6 +2,7 @@ from models.traffic_models.idm import Idm
 from models.traffic_models.shared_constants import min_clearance
 
 
+# FIXME: Shouldn't really be a class. A module with methods is just fine!
 class LaneChangeModel:
 
     __lane_change_threshold = 0.1

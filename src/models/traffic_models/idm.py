@@ -1,6 +1,7 @@
 from models.traffic_models.shared_constants import min_clearance
 
 
+# FIXME: Shouldn't really be a class.
 class Idm:
     T = 1.67
     delta = 4.0
