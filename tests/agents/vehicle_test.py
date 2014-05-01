@@ -81,7 +81,12 @@ class VehicleTest(TestCase):
         self.lane.length = lane_length
         vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
         self.assertEqual(vehicle.position, lane_length)
-        self.assertTrue(vehicle.at_end_of_lane)
+
+    def test_should_say_it_has_arrived_when_it_gets_to_the_end_of_the_lane(self):
+        lane_length = 10
+        self.lane.length = lane_length
+        vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
+        self.assertTrue(vehicle.arrived)
 
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)

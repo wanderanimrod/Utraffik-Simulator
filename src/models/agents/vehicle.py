@@ -16,7 +16,7 @@ class Vehicle:
         self.desired_deceleration = 1.67
         self.length = 5.0
         self.politeness = 0.5
-        self.at_end_of_lane = False
+        self.arrived = False
 
     def prospective_follower(self):
         target_lane = self.lane.next_lane()
@@ -47,7 +47,7 @@ class Vehicle:
             self.position = new_position
         else:
             self.position = self.lane.length
-            self.at_end_of_lane = True
+            self.arrived = True
 
     def __change_lane_if_necessary(self):
         if LaneChangeModel.vehicle_should_change_lane(self):
