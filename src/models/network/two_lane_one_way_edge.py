@@ -19,3 +19,11 @@ class TwoLaneOneWayEdge:
             self.second_lane = lane
         else:
             raise Exception("Two Lane Edge already has two lanes.")
+
+    def vehicles(self):
+        vehicles = []
+        if self.first_lane.vehicles:
+            vehicles.extend(self.first_lane.vehicles)
+        if self.second_lane.vehicles:
+            vehicles.extend(self.second_lane.vehicles)
+        return vehicles

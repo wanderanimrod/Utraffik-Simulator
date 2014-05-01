@@ -24,12 +24,12 @@ class LaneTest(TestCase):
     def test_should_add_vehicle_to_itself(self):
         vehicle = mock()
         self.lane.add_vehicle(vehicle)
-        self.assertTrue(self.lane.__dict__['_Lane__vehicles'].__contains__(vehicle))
+        self.assertTrue(self.lane.vehicles.__contains__(vehicle))
 
     def test_should_remove_vehicle_from_self(self):
         vehicle = Vehicle(0, self.lane)
         self.lane.remove_vehicle(vehicle)
-        self.assertFalse(self.lane.__dict__['_Lane__vehicles'].__contains__(vehicle))
+        self.assertFalse(self.lane.vehicles.__contains__(vehicle))
 
     def test_should_get_leading_vehicle(self):
         leader, follower, lane = self.make_leader_and_follower()
@@ -74,7 +74,7 @@ class LaneTest(TestCase):
         middle_vehicle = Vehicle(11, self.adjacent_lane)
         middle_vehicle.position = (leader.position - follower.position)/2
         lane.insert_vehicle_at_current_position(middle_vehicle)
-        self.assert_vehicles_are_in_order(lane.__dict__['_Lane__vehicles'])
+        self.assert_vehicles_are_in_order(lane.vehicles)
 
     def test_should_get_next_lane(self):
         self.lane.next_lane()
