@@ -3,9 +3,4 @@ from dispatch import Signal
 
 
 E_TRANSLATOR_WAITING = Signal()
-
-
-def respond(sender, **kwargs):
-    print "*" * 70; print "Handler called by %s with args %s" % (sender, kwargs); print "*" * 70
-
-E_TRANSLATOR_WAITING.connect(respond)
+E_END_OF_LANE = Signal()

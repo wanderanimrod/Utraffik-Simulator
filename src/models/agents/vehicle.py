@@ -1,3 +1,4 @@
+from app.events.events import E_END_OF_LANE
 from models.traffic_models.idm import Idm
 from models.traffic_models.lane_change_model import LaneChangeModel
 
@@ -16,7 +17,6 @@ class Vehicle:
         self.desired_deceleration = 1.67
         self.length = 5.0
         self.politeness = 0.5
-        self.arrived = False
 
     def prospective_follower(self):
         target_lane = self.lane.next_lane()
@@ -47,7 +47,7 @@ class Vehicle:
             self.position = new_position
         else:
             self.position = self.lane.length
-            self.arrived = True
+            E_END_OF_LANE.send(sender=self, next_lane=None)
 
     def __change_lane_if_necessary(self):
         if LaneChangeModel.vehicle_should_change_lane(self):

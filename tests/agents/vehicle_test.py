@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from mockito import mock, when, verify, never
+from app.events import events
 
 from models.agents.vehicle import Vehicle
 from models.agents.vehicle_factory import dummy_leader
@@ -76,17 +77,20 @@ class VehicleTest(TestCase):
         verify(old_lane, never).remove_vehicle(vehicle)
         self.assertEqual(vehicle.lane, old_lane)
 
-    def test_should_go_to_the_end_of_current_lane_and_wait_if_next_translation_would_put_it_off_the_lane(self):
+    def test_should_go_to_the_end_of_current_lane_if_next_translation_would_put_it_off_the_lane(self):
         lane_length = 10
         self.lane.length = lane_length
         vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
         self.assertEqual(vehicle.position, lane_length)
 
-    def test_should_say_it_has_arrived_when_it_gets_to_the_end_of_the_lane(self):
+    # TODO Add next_edge to the parameters provided during this broadcast
+    def test_should_broadcast_end_of_lane_event_when_it_gets_to_the_end_of_a_lane(self):
+        end_of_lane_mock_event = mock()
+        events.E_END_OF_LANE.send = end_of_lane_mock_event.send
         lane_length = 10
         self.lane.length = lane_length
         vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
-        self.assertTrue(vehicle.arrived)
+        verify(end_of_lane_mock_event).send(sender=vehicle, next_lane=None)
 
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
