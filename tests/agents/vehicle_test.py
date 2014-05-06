@@ -87,10 +87,17 @@ class VehicleTest(TestCase):
     def test_should_broadcast_end_of_lane_event_when_it_gets_to_the_end_of_a_lane(self):
         end_of_lane_mock_event = mock()
         events.E_END_OF_LANE.send = end_of_lane_mock_event.send
-        lane_length = 10
-        self.lane.length = lane_length
+        self.lane.length = 10
         vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
         verify(end_of_lane_mock_event).send(sender=vehicle, next_lane=None)
+
+    # TODO Change to only broadcast this event if the vehicle has really gotten to the end of its journey
+    def test_should_broadcast_end_of_journey_event_when_it_gets_to_the_end_of_a_lane(self):
+        end_of_journey_mock = mock()
+        events.E_END_OF_JOURNEY.send = end_of_journey_mock.send
+        self.lane.length = 10
+        vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
+        verify(end_of_journey_mock).send(sender=vehicle)
 
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)

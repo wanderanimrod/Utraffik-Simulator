@@ -1,4 +1,4 @@
-from app.events.events import E_END_OF_LANE
+from app.events.events import E_END_OF_LANE, E_END_OF_JOURNEY
 from models.traffic_models.idm import Idm
 from models.traffic_models.lane_change_model import LaneChangeModel
 
@@ -48,6 +48,7 @@ class Vehicle:
         else:
             self.position = self.lane.length
             E_END_OF_LANE.send(sender=self, next_lane=None)
+            E_END_OF_JOURNEY.send(sender=self)
 
     def __change_lane_if_necessary(self):
         if LaneChangeModel.vehicle_should_change_lane(self):
