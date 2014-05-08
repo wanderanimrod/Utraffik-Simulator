@@ -26,15 +26,14 @@ class TranslatorTest(TestCase):
         verify(self.translator_waiting_event, never).send(sender=translator)
 
     def test_sweep_should_translate_all_vehicles_on_given_edges_once(self):
-        vehicle_1 = mock()
-        vehicle_2 = mock()
-        edge, lane_1, lane_2 = self.make_edge_without_vehicles()
-        lane_1.add_vehicle(vehicle_1)
-        lane_2.add_vehicle(vehicle_2)
+        edge, vehicle_1, vehicle_2 = self.make_edge_with_vehicles(first=mock(), second=mock())
         translator = Translator([edge])
         translator.sweep(5)
         verify(vehicle_1, times=1).translate(5)
         verify(vehicle_2, times=1).translate(5)
+
+    def test_should_use_sim_time_as_time_delta_for_translate_during_first_call_to_sweep(self):
+        pass
 
     def make_edge_without_vehicles(self):
         edge = TwoLaneOneWayEdge(0, 100)
@@ -42,8 +41,14 @@ class TranslatorTest(TestCase):
         lane_2 = Lane(1, edge)
         return edge, lane_1, lane_2
 
-    def make_edge_with_vehicles(self):
+    def make_edge_with_vehicles(self, first=None, second=None):
         edge, lane_1, lane_2 = self.make_edge_without_vehicles()
-        vehicle_1 = Vehicle(0, lane_1)
-        vehicle_2 = Vehicle(1, lane_2)
-        return edge, vehicle_1, vehicle_2
+        if not first:
+            first = Vehicle(0, lane_1)
+        else:
+            lane_1.add_vehicle(first)
+        if not second:
+            second = Vehicle(1, lane_2)
+        else:
+            lane_2.add_vehicle(second)
+        return edge, first, second
