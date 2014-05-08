@@ -1,5 +1,7 @@
 from unittest import TestCase
+
 from mockito import mock
+
 from models.agents.vehicle import Vehicle
 from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge

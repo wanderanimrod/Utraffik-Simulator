@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from mockito import mock, when, verify, never
-from app.events import events
 
+from app.events import events
 from models.agents.vehicle import Vehicle
 from models.agents.vehicle_factory import dummy_leader
 from models.traffic_models.idm import Idm

@@ -1,4 +1,5 @@
 from mockito import mock
+
 from models.agents.vehicle import Vehicle
 
 
