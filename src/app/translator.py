@@ -8,9 +8,15 @@ class Translator:
         self.vehicles = self.__get_vehicles()
         self.__translatables = self.vehicles
         self.__check_translation_load()
+        self.last_sweep_time = None
 
-    def run(self):
-        pass
+    def sweep(self, sim_time):
+        if self.last_sweep_time:
+            time_delta = sim_time - self.last_sweep_time
+        else:
+            time_delta = sim_time
+        for vehicle in self.__translatables:
+            vehicle.translate(time_delta)
 
     def __get_vehicles(self):
         vehicles = []
@@ -20,5 +26,5 @@ class Translator:
         return vehicles
 
     def __check_translation_load(self):
-        if not len(self.__translatables):
+        if not self.__translatables:
             E_TRANSLATOR_WAITING.send(sender=self)

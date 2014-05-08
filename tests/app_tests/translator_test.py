@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from mockito import verify, mock, never
+from mockito import verify, mock, never, when, spy
 
 from app.events import events
 from app.translator import Translator
@@ -15,15 +15,6 @@ class TranslatorTest(TestCase):
         self.translator_waiting_event = mock()
         events.E_TRANSLATOR_WAITING.send = self.translator_waiting_event.send
 
-    def xtest_should_translate_all_vehicles_on_given_edges_until_they_reach_their_destinations(self):
-        edge, vehicle_1, vehicle_2 = self.make_edge_with_vehicles()
-        translator = Translator([edge])
-        translator.run()
-        while not translator.waiting():
-            continue
-        self.assertTrue(vehicle_1.arrived)
-        self.assertTrue(vehicle_2.arrived)
-
     def test_should_fire_waiting_event_if_there_are_no_vehicles_on_the_assigned_edges_upon_instantiation(self):
         edge, _, _ = self.make_edge_without_vehicles()
         translator = Translator([edge])
@@ -33,6 +24,17 @@ class TranslatorTest(TestCase):
         edge, _, _ = self.make_edge_with_vehicles()
         translator = Translator([edge])
         verify(self.translator_waiting_event, never).send(sender=translator)
+
+    def test_sweep_should_translate_all_vehicles_on_given_edges_once(self):
+        vehicle_1 = mock()
+        vehicle_2 = mock()
+        edge, lane_1, lane_2 = self.make_edge_without_vehicles()
+        lane_1.add_vehicle(vehicle_1)
+        lane_2.add_vehicle(vehicle_2)
+        translator = Translator([edge])
+        translator.sweep(5)
+        verify(vehicle_1, times=1).translate(5)
+        verify(vehicle_2, times=1).translate(5)
 
     def make_edge_without_vehicles(self):
         edge = TwoLaneOneWayEdge(0, 100)
