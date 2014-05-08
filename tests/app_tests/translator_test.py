@@ -39,6 +39,13 @@ class TranslatorTest(TestCase):
         translator.sweep(sim_time)
         verify(vehicle).translate(sim_time)
 
+    def test_should_use_difference_between_sim_time_and_last_translate_time_as_time_delta_for_translate(self):
+        edge, vehicle, _ = self.make_edge_with_mock_vehicles()
+        translator = Translator([edge])
+        translator.sweep(2)
+        translator.sweep(5)
+        verify(vehicle).translate(5 - 2)
+
     def make_edge_without_vehicles(self):
         edge = TwoLaneOneWayEdge(0, 100)
         lane_1 = Lane(0, edge)

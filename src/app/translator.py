@@ -17,6 +17,7 @@ class Translator:
             time_delta = sim_time
         for vehicle in self.__translatables:
             vehicle.translate(time_delta)
+        self.last_sweep_time = sim_time
 
     def __get_vehicles(self):
         vehicles = []
