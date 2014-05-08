@@ -33,7 +33,11 @@ class TranslatorTest(TestCase):
         verify(vehicle_2, times=1).translate(5)
 
     def test_should_use_sim_time_as_time_delta_for_translate_during_first_call_to_sweep(self):
-        pass
+        edge, vehicle, _ = self.make_edge_with_vehicles(first=mock(), second=mock())
+        translator = Translator([edge])
+        sim_time = 2
+        translator.sweep(sim_time)
+        verify(vehicle).translate(sim_time)
 
     def make_edge_without_vehicles(self):
         edge = TwoLaneOneWayEdge(0, 100)
