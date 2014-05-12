@@ -8,14 +8,11 @@ class Translator:
         self.edges = edges
         self.__translatables = self.__get_vehicles()
         self.__check_translation_load()
-        self.last_sweep_time = None
+        self.last_sweep_time = 0
         E_END_OF_JOURNEY.connect(self.__end_of_journey_listener)
 
     def sweep(self, sim_time):
-        if self.last_sweep_time:
-            time_delta = sim_time - self.last_sweep_time
-        else:
-            time_delta = sim_time
+        time_delta = sim_time - self.last_sweep_time
         for vehicle in copy(self.__translatables):
             vehicle.translate(time_delta)
 
@@ -34,6 +31,7 @@ class Translator:
             E_TRANSLATOR_WAITING.send(sender=self)
 
     def __end_of_journey_listener(self, sender, **kwargs):
+        """ All vehicles in a process will belong to that process' translator. Since there is one translator per
+            process, there is no chance that the vehicle wont belong to this translator
+        """
         self.__translatables.remove(sender)
-        # All vehicles in a process will belong to that process' translator. No chance that the vehicle wont belong to
-        # this translator
