@@ -1,8 +1,9 @@
 from unittest import TestCase
 
-from mockito import verify, mock, never
+from mockito import verify, mock, never, when
 
 from app.events import events
+from app.events.events import E_END_OF_JOURNEY
 from app.translator import Translator
 from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
@@ -13,6 +14,20 @@ class TranslatorTest(TestCase):
     def setUp(self):
         self.translator_waiting_event = mock()
         events.E_TRANSLATOR_WAITING.send = self.translator_waiting_event.send
+
+    def tearDown(self):
+        """ Disconnect all receivers of the end of journey event so translators created in previously run tests do not
+         receive events fired by vehicles belonging to translators of other tests.
+        """
+        E_END_OF_JOURNEY.receivers = []
+
+    def test_should_fire_waiting_event_when_all_assigned_vehicles_get_to_end_of_their_journeys(self):
+        edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
+        translator = Translator([edge])
+        vehicle_1.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_1)
+        vehicle_2.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_2)
+        translator.sweep(1)
+        verify(self.translator_waiting_event).send(sender=translator)
 
     def test_should_fire_waiting_event_if_there_are_no_vehicles_on_the_assigned_edges_upon_instantiation(self):
         edge, _, _ = self.make_edge_without_vehicles()

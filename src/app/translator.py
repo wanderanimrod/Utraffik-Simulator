@@ -1,23 +1,26 @@
-from app.events.events import E_TRANSLATOR_WAITING
+from copy import copy
+from app.events.events import E_TRANSLATOR_WAITING, E_END_OF_JOURNEY
 
 
 class Translator:
 
     def __init__(self, edges):
         self.edges = edges
-        self.vehicles = self.__get_vehicles()
-        self.__translatables = self.vehicles
+        self.__translatables = self.__get_vehicles()
         self.__check_translation_load()
         self.last_sweep_time = None
+        E_END_OF_JOURNEY.connect(self.__end_of_journey_listener)
 
     def sweep(self, sim_time):
         if self.last_sweep_time:
             time_delta = sim_time - self.last_sweep_time
         else:
             time_delta = sim_time
-        for vehicle in self.__translatables:
+        for vehicle in copy(self.__translatables):
             vehicle.translate(time_delta)
+
         self.last_sweep_time = sim_time
+        self.__check_translation_load()
 
     def __get_vehicles(self):
         vehicles = []
@@ -29,3 +32,8 @@ class Translator:
     def __check_translation_load(self):
         if not self.__translatables:
             E_TRANSLATOR_WAITING.send(sender=self)
+
+    def __end_of_journey_listener(self, sender, **kwargs):
+        self.__translatables.remove(sender)
+        # All vehicles in a process will belong to that process' translator. No chance that the vehicle wont belong to
+        # this translator
