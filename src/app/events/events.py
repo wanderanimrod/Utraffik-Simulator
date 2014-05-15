@@ -2,6 +2,5 @@
 from dispatch import Signal
 
 
-E_TRANSLATOR_WAITING = Signal()
 E_END_OF_LANE = Signal()
 E_END_OF_JOURNEY = Signal()

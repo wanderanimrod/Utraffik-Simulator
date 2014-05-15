@@ -1,8 +1,7 @@
 from unittest import TestCase
 
-from mockito import verify, mock, never, when
+from mockito import verify, mock, never
 
-from app.events import events
 from app.events.events import E_END_OF_JOURNEY
 from app.translator import Translator
 from models.network.lane import Lane
@@ -13,8 +12,6 @@ class TranslatorTest(TestCase):
 
     def setUp(self):
         self.translator_waiting_event = mock()
-        self.original_translator_waiting_send = events.E_TRANSLATOR_WAITING.send
-        events.E_TRANSLATOR_WAITING.send = self.translator_waiting_event.send
 
     def tearDown(self):
         """ Disconnect all receivers of the end of journey event so translators created in previously run tests do not
@@ -22,21 +19,18 @@ class TranslatorTest(TestCase):
         """
         E_END_OF_JOURNEY.receivers = []
 
-        # Clean up alterations to global event objects
-        events.E_TRANSLATOR_WAITING.send = self.original_translator_waiting_send
-
     def test_should_fire_waiting_event_when_all_assigned_vehicles_get_to_end_of_their_journeys(self):
         edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
         vehicle_1.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_1)
         vehicle_2.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_2)
         translator.sweep(1)
-        verify(self.translator_waiting_event).send(sender=translator)
+        self.assertTrue(translator.is_waiting)
 
-    def test_should_fire_waiting_event_if_there_are_no_vehicles_on_the_assigned_edges_upon_instantiation(self):
+    def test_should_be_waiting_if_there_are_no_vehicles_on_the_assigned_edges_upon_instantiation(self):
         edge, _, _ = self.make_edge_without_vehicles()
         translator = Translator([edge])
-        verify(self.translator_waiting_event).send(sender=translator)
+        self.assertTrue(translator.is_waiting)
 
     def test_should_not_fire_waiting_event_if_there_are_vehicles_to_translate_upon_instantiation(self):
         edge, _, _ = self.make_edge_with_mock_vehicles()
