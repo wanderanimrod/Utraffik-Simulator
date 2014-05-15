@@ -94,9 +94,11 @@ class VehicleTest(TestCase):
     # TODO Change to only broadcast this event if the vehicle has really gotten to the end of its journey
     def test_should_broadcast_end_of_journey_event_when_it_gets_to_the_end_of_a_lane(self):
         end_of_journey_mock = mock()
+        old_send = events.E_END_OF_JOURNEY.send
         events.E_END_OF_JOURNEY.send = end_of_journey_mock.send
         self.lane.length = 10
         vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
+        events.E_END_OF_JOURNEY.send = old_send
         verify(end_of_journey_mock).send(sender=vehicle)
 
     def fix_idm_acceleration(self, acceleration):
