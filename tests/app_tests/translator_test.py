@@ -13,6 +13,7 @@ class TranslatorTest(TestCase):
 
     def setUp(self):
         self.translator_waiting_event = mock()
+        self.original_translator_waiting_send = events.E_TRANSLATOR_WAITING.send
         events.E_TRANSLATOR_WAITING.send = self.translator_waiting_event.send
 
     def tearDown(self):
@@ -20,6 +21,9 @@ class TranslatorTest(TestCase):
          receive events fired by vehicles belonging to translators of other tests.
         """
         E_END_OF_JOURNEY.receivers = []
+
+        # Clean up alterations to global event objects
+        events.E_TRANSLATOR_WAITING.send = self.original_translator_waiting_send
 
     def test_should_fire_waiting_event_when_all_assigned_vehicles_get_to_end_of_their_journeys(self):
         edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
