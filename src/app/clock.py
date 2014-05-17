@@ -15,8 +15,13 @@ class Clock():
         self.__time_of_last_call = time_now
         return time_elapsed
 
-    def start(self):
-        self.__time_of_last_call = time()
+    def start(self, at=None):
+        """ Can't have time() as the default arg in the method signature. It will be evaluated at the time of parsing
+         the program and not at the time of calling the start method!
+        """
+        if not at:
+            at = time()
+        self.__time_of_last_call = at
         self.__stopped = False
         return self
 
