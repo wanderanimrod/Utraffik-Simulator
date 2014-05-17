@@ -40,3 +40,17 @@ class ClockTest(TestCase):
         sleep(0.2)
         clock = Clock().start(at=start_time)
         self.assert_almost_equal(clock.time_elapsed(), (time() - start_time))
+
+
+class ClockSynchronisationTests(TestCase):
+
+    def setUp(self):
+        self.assert_almost_equal = lambda evaluated, expected: self.assertAlmostEqual(evaluated, expected, places=2)
+
+    def test_clocks_started_at_different_real_times_but_passed_the_same_start_time_should_agree_about_time_now(self):
+        start_time = time()
+        clock_1 = Clock().start(at=start_time)
+        sleep(0.2)
+        clock_2 = Clock().start(at=start_time)
+        time_diff = clock_1.time_elapsed() - clock_2.time_elapsed()
+        self.assert_almost_equal(time_diff, 0)
