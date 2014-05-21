@@ -19,7 +19,7 @@ class TranslatorTest(TestCase):
         """
         E_END_OF_JOURNEY.receivers = []
 
-    def test_should_fire_waiting_event_when_all_assigned_vehicles_get_to_end_of_their_journeys(self):
+    def test_should_be_waiting_when_all_assigned_vehicles_get_to_end_of_their_journeys(self):
         edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
         vehicle_1.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_1)
@@ -32,10 +32,10 @@ class TranslatorTest(TestCase):
         translator = Translator([edge])
         self.assertTrue(translator.is_waiting)
 
-    def test_should_not_fire_waiting_event_if_there_are_vehicles_to_translate_upon_instantiation(self):
+    def test_should_not_be_waiting_if_there_are_vehicles_to_translate_upon_instantiation(self):
         edge, _, _ = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
-        verify(self.translator_waiting_event, never).send(sender=translator)
+        self.assertFalse(translator.is_waiting)
 
     def test_sweep_should_translate_all_vehicles_on_given_edges_once(self):
         edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
