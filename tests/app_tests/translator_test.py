@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from mockito import verify, mock, never
+from mockito import verify, mock
 
 from app.events.events import E_END_OF_JOURNEY
 from app.translator import Translator
@@ -44,19 +44,13 @@ class TranslatorTest(TestCase):
         verify(vehicle_1, times=1).translate(5)
         verify(vehicle_2, times=1).translate(5)
 
-    def test_should_use_sim_time_as_time_delta_for_translate_during_first_call_to_sweep(self):
-        edge, vehicle, _ = self.make_edge_with_mock_vehicles()
-        translator = Translator([edge])
-        sim_time = 2
-        translator.sweep(sim_time)
-        verify(vehicle).translate(sim_time)
-
-    def test_should_use_difference_between_sim_time_and_last_translate_time_as_time_delta_for_translate(self):
+    def test_should_pass_time_elapsed_directly_to_translate_function(self):
         edge, vehicle, _ = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
         translator.sweep(2)
-        translator.sweep(5)
-        verify(vehicle).translate(5 - 2)
+        verify(vehicle).translate(2)
+        translator.sweep(4)
+        verify(vehicle).translate(4)
 
     def make_edge_without_vehicles(self):
         edge = TwoLaneOneWayEdge(0, 100)

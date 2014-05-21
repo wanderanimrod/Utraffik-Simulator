@@ -8,17 +8,13 @@ class Translator:
     def __init__(self, edges):
         self.edges = edges
         self.__translatables = self.__get_vehicles()
-        self.last_sweep_time = 0
         self.is_waiting = False
         self.__check_translation_load()
         E_END_OF_JOURNEY.connect(self.__end_of_journey_listener)
 
-    def sweep(self, sim_time):
-        time_delta = sim_time - self.last_sweep_time
+    def sweep(self, time_delta):
         for vehicle in copy(self.__translatables):
             vehicle.translate(time_delta)
-
-        self.last_sweep_time = sim_time
         self.__check_translation_load()
 
     def __get_vehicles(self):
