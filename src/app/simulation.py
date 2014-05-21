@@ -1,4 +1,6 @@
 from multiprocessing import Queue, Process
+from time import time
+from app.clock import Clock
 
 from app.translator import Translator
 from models.agents.vehicle import Vehicle
@@ -6,19 +8,17 @@ from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
 
 
-vehicles_queue_1 = Queue()
-
-
-def start_translator(sub_network, vehicles_queue):
+def start_translator(sub_network, sim_start_time):
     translator = Translator(sub_network)
+    clock = Clock().start(at=sim_start_time)
     while not translator.is_waiting:
-        translator.sweep(10)  # TODO Figure out sim timing
+        translator.sweep(clock.time_elapsed())
 
 
 def run():
     sub_net_1 = load_network()
-    start_sim_clock()
-    process = Process(target=start_translator, args=(sub_net_1, vehicles_queue_1))
+    sim_start_time = time()
+    process = Process(target=start_translator, args=(sub_net_1, sim_start_time))
     process.start()
     process.join()
 
@@ -32,6 +32,4 @@ def load_network():
     Vehicle(0, lane_2)
     return [edge]
 
-
-def start_sim_clock():
-    pass
+run()
