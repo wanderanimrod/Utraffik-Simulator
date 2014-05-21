@@ -1,7 +1,7 @@
-from multiprocessing import Queue, Process
+from multiprocessing import Process
 from time import time
-from app.clock import Clock
 
+from app.clock import Clock
 from app.translator import Translator
 from models.agents.vehicle import Vehicle
 from models.network.lane import Lane
@@ -24,7 +24,6 @@ def run():
 
 
 def load_network():
-    # TODO Should load from network specification files or graph DB.
     edge = TwoLaneOneWayEdge(0, 100)
     lane_1 = Lane(0, edge)
     lane_2 = Lane(1, edge)
