@@ -1,13 +1,3 @@
-### Driving program by events
-
-Create event classes. If a vehicle does something that is a noteworthy event, it should create that event and emit it.
-
-Emitting an event should send the event onto an event queue
-
-The simulation loop (equivalent to a game loop) with an event dispatcher should read these events from the queue and
-dispatch them to an appropriate queue for the target process of that kind of event
-
-
 ### Sensors and other domain-based sim data consumers
 
 Vehicles send snapshots of themselves along with a translate event. The snapshot will form part of the event data. Other
@@ -30,6 +20,9 @@ assignment is as follows (each bullet with a process):
 
 Then, we should distribute the translation of vehicles among about __4 processes__. Translation should be based on edges
 and not vehicles or lanes so we avoid sharing state between processes.
+
+### Web workers for the programmable visualiser
+http://www.htmlgoodies.com/html5/tutorials/introducing-html-5-web-workers-bringing-multi-threading-to-javascript.html#fbid=b8fvyB-675Y
 
 
 
