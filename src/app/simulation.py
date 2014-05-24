@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from time import time
+from time import time, sleep
 
 from app.clock import Clock
 from app.translator import Translator
@@ -20,6 +20,10 @@ def run():
     sim_start_time = time()
     process = Process(target=start_translator, args=(sub_net_1, sim_start_time))
     process.start()
+    start = time()
+    while time() - start < 16:
+        print "Checking for output"
+        sleep(1)
     process.join()
 
 
@@ -30,5 +34,3 @@ def load_network():
     Vehicle(0, lane_1)
     Vehicle(0, lane_2)
     return [edge]
-
-run()
