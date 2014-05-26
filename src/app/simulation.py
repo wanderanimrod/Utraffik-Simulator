@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from time import time, sleep
+from time import time
 
 from app.clock import Clock
 from app.translator import Translator
@@ -13,6 +13,8 @@ def start_translator(sub_network, sim_start_time):
     clock = Clock().start(at=sim_start_time)
     while not translator.is_waiting:
         translator.sweep(clock.time_elapsed())
+        # Check for stop/pause commands and act accordingly
+    print "Done translating"
 
 
 def run():
@@ -20,11 +22,21 @@ def run():
     sim_start_time = time()
     process = Process(target=start_translator, args=(sub_net_1, sim_start_time))
     process.start()
-    start = time()
-    while time() - start < 16:
-        print "Checking for output"
-        sleep(1)
     process.join()
+
+
+def start():
+    pass
+
+
+def stop():
+    # Interrupt the simulator and kill the processes
+    pass
+
+
+def pause():
+    # Interrupt the sim and pause the clocks
+    pass
 
 
 def load_network():
@@ -34,3 +46,5 @@ def load_network():
     Vehicle(0, lane_1)
     Vehicle(0, lane_2)
     return [edge]
+
+run()
