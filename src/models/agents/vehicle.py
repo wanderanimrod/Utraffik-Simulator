@@ -1,4 +1,4 @@
-from app.events.events import E_END_OF_LANE, E_END_OF_JOURNEY
+from app.events.events import E_END_OF_LANE, E_END_OF_JOURNEY, E_TRANSLATE
 from models.traffic_models.idm import Idm
 from models.traffic_models.lane_change_model import LaneChangeModel
 
@@ -40,6 +40,7 @@ class Vehicle:
         self.velocity = u + a*t
         self.acceleration = a
         self.__change_lane_if_necessary()
+        E_TRANSLATE.send(sender=self)
 
     def __update_position_if_still_on_lane(self, displacement):
         new_position = self.position + displacement

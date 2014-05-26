@@ -107,6 +107,12 @@ class VehicleTest(TestCase):
         vehicle, _, _ = self.translate(self.vehicle, change_lane=False, time_delta=6)
         verify(end_of_journey_mock).send(sender=vehicle)
 
+    def test_should_broadcast_translation_event_every_time_it_translates(self):
+        translation_event_mock = mock()
+        events.E_TRANSLATE.send = translation_event_mock.send
+        self.translate(self.vehicle)
+        verify(translation_event_mock).send(sender=self.vehicle)
+
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
 

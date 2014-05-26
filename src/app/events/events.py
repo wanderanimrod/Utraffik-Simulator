@@ -4,3 +4,4 @@ from dispatch import Signal
 
 E_END_OF_LANE = Signal()
 E_END_OF_JOURNEY = Signal()
+E_TRANSLATE = Signal()
