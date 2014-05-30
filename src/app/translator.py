@@ -9,13 +9,13 @@ class Translator:
         self.edges = edges
         self.__translatables = self.__get_vehicles()
         self.is_waiting = False
-        self.__check_translation_load()
+        self.__check_load()
         E_END_OF_JOURNEY.connect(self.__end_of_journey_listener)
 
     def sweep(self, time_delta):
         for vehicle in copy(self.__translatables):
             vehicle.translate(time_delta)
-        self.__check_translation_load()
+        self.__check_load()
 
     def __get_vehicles(self):
         vehicles = []
@@ -24,7 +24,7 @@ class Translator:
                 vehicles.extend(edge.vehicles())
         return vehicles
 
-    def __check_translation_load(self):
+    def __check_load(self):
         if not self.__translatables:
             self.is_waiting = True
 

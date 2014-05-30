@@ -3,7 +3,7 @@ from unittest import TestCase
 from mockito import mock
 
 from app.events.events import E_TRANSLATE
-from app.vehicle_snapshot_relay import SnapshotRelay
+from app.snapshot_relay import SnapshotRelay
 from models.agents.vehicle import Vehicle
 
 
