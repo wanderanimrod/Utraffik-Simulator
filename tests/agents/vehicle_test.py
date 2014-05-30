@@ -21,10 +21,12 @@ class VehicleTest(TestCase):
         # Get reference to global objects for clean up after tests
         self.original_end_of_journey_send = events.E_END_OF_JOURNEY.send
         self.original_end_of_lane_send = events.E_END_OF_LANE.send
+        self.original_translate_event_send = events.E_TRANSLATE.send
 
     def tearDown(self):
         events.E_END_OF_JOURNEY.send = self.original_end_of_journey_send
         events.E_END_OF_LANE.send = self.original_end_of_lane_send
+        events.E_TRANSLATE.send = self.original_translate_event_send
 
     def test_should_be_created_with_position_zero(self):
         self.assertEqual(self.vehicle.position, 0)
