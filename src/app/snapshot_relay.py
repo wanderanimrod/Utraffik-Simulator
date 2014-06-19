@@ -10,7 +10,7 @@ class SnapshotRelay:
     def __add_snapshot(self, sender, **kwargs):
         self.__snapshots.append(sender)
 
-    def all_snapshots(self):
+    def get_all_snapshots(self):
         snapshots = self.__snapshots
         self.__snapshots = []
         return snapshots
