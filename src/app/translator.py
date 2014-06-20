@@ -12,9 +12,11 @@ class Translator:
         self.__check_load()
         E_END_OF_JOURNEY.connect(self.__end_of_journey_listener)
 
-    def sweep(self, time_delta):
+    def sweep(self, clock):
+        time_delta = clock.time_elapsed()
+        time_now = clock.now()
         for vehicle in copy(self.__translatables):
-            vehicle.translate(time_delta)
+            vehicle.translate(time_delta, time_now)
         self.__check_load()
 
     def __get_vehicles(self):

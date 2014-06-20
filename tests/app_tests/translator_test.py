@@ -22,9 +22,9 @@ class TranslatorTest(TestCase):
     def test_should_be_waiting_when_all_assigned_vehicles_get_to_end_of_their_journeys(self):
         edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
-        vehicle_1.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_1)
-        vehicle_2.translate = lambda t: E_END_OF_JOURNEY.send(sender=vehicle_2)
-        translator.sweep(1)
+        vehicle_1.translate = lambda time_elapsed, time_now: E_END_OF_JOURNEY.send(sender=vehicle_1)
+        vehicle_2.translate = lambda time_elapsed, time_now: E_END_OF_JOURNEY.send(sender=vehicle_2)
+        translator.sweep(self.FakeClock(1))
         self.assertTrue(translator.is_waiting)
 
     def test_should_be_waiting_if_there_are_no_vehicles_on_the_assigned_edges_upon_instantiation(self):
@@ -40,17 +40,17 @@ class TranslatorTest(TestCase):
     def test_sweep_should_translate_all_vehicles_on_given_edges_once(self):
         edge, vehicle_1, vehicle_2 = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
-        translator.sweep(5)
-        verify(vehicle_1, times=1).translate(5)
-        verify(vehicle_2, times=1).translate(5)
+        translator.sweep(self.FakeClock(5))
+        verify(vehicle_1, times=1).translate(5, 0)
+        verify(vehicle_2, times=1).translate(5, 0)
 
     def test_should_pass_time_elapsed_directly_to_translate_function(self):
         edge, vehicle, _ = self.make_edge_with_mock_vehicles()
         translator = Translator([edge])
-        translator.sweep(2)
-        verify(vehicle).translate(2)
-        translator.sweep(4)
-        verify(vehicle).translate(4)
+        translator.sweep(self.FakeClock(2))
+        verify(vehicle).translate(2, 0)
+        translator.sweep(self.FakeClock(4))
+        verify(vehicle).translate(4, 0)
 
     def make_edge_without_vehicles(self):
         edge = TwoLaneOneWayEdge(0, 100)
@@ -65,3 +65,14 @@ class TranslatorTest(TestCase):
         lane_1.add_vehicle(first)
         lane_2.add_vehicle(second)
         return edge, first, second
+
+    class FakeClock():
+
+        def __init__(self, fixed_time_elapsed):
+            self.fixed_time_elapsed = fixed_time_elapsed
+
+        def time_elapsed(self):
+            return self.fixed_time_elapsed
+
+        def now(self):
+            return 0

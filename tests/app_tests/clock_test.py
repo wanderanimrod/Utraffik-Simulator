@@ -38,6 +38,18 @@ class ClockTest(TestCase):
         sleep(0.2)
         self.assert_almost_equal(clock.time_elapsed(), 0.2)
 
+    def test_should_get_time_now(self):
+        clock = self.get_started_clock()
+        sleep(0.1)
+        self.assert_almost_equal(clock.now(), 0.1)
+
+    def test_getting_time_now_should_not_affect_results_of_time_elapsed_since_last_call(self):
+        clock = self.get_started_clock()
+        sleep(0.1)
+        clock.now()
+        sleep(0.1)
+        self.assert_almost_equal(clock.time_elapsed(), 0.2)
+
     def test_should_start_at_a_time_passed_into_the_start_method(self):
         start_time = time()
         sleep(0.2)

@@ -32,15 +32,15 @@ class Vehicle:
     def leader(self):
         return self.lane.get_leader(self)
 
-    def translate(self, t):
+    def translate(self, time_delta, time_now):
         u = self.velocity
         a = Idm.calculate_acceleration(self, self.leader())
-        s = u*t + 0.5*(a*(t**2))
+        s = u*time_delta + 0.5*(a*(time_delta**2))
         self.__update_position_if_still_on_lane(s)
-        self.velocity = u + a*t
+        self.velocity = u + a*time_delta
         self.acceleration = a
         self.__change_lane_if_necessary()
-        E_TRANSLATE.send(sender=self)
+        E_TRANSLATE.send(sender=self, timestamp=time_now)
 
     def __update_position_if_still_on_lane(self, displacement):
         new_position = self.position + displacement

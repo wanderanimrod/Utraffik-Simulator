@@ -12,7 +12,8 @@ def start_translator(sub_network, sim_start_time):
     translator = Translator(sub_network)
     clock = Clock().start(at=sim_start_time)
     while not translator.is_waiting:
-        translator.sweep(clock.time_elapsed())
+        translator.sweep(clock)
+        # Relay snapshots to redis
         # Check for stop/pause commands and act accordingly
     print "Done translating"
 

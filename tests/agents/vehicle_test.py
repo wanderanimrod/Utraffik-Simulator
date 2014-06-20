@@ -54,19 +54,19 @@ class VehicleTest(TestCase):
     def test_should_update_velocity_after_translate_using_first_equation_of_motion(self):
         self.vehicle.velocity = 12
         self.fix_idm_acceleration(0.5)
-        self.vehicle.translate(100)
+        self.vehicle.translate(100, 0)
         self.assertEqual(self.vehicle.velocity, 62)
 
     def test_should_update_position_after_translate_using_second_equation_of_motion(self):
         self.fix_idm_acceleration(0.5)
         self.vehicle.velocity = 10
         self.vehicle.position = 10.0
-        self.vehicle.translate(10)
+        self.vehicle.translate(10, 0)
         self.assertEqual(self.vehicle.position, 135.0)
 
     def test_should_update_acceleration_after_translate_to_acceleration_returned_by_idm(self):
         self.fix_idm_acceleration(0.6)
-        self.vehicle.translate(1)
+        self.vehicle.translate(1, 0)
         self.assertEqual(self.vehicle.acceleration, 0.6)
 
     def test_should_change_lane_after_translate_if_lane_change_is_okay(self):
@@ -112,14 +112,14 @@ class VehicleTest(TestCase):
     def test_should_broadcast_translation_event_every_time_it_translates(self):
         translation_event_mock = mock()
         events.E_TRANSLATE.send = translation_event_mock.send
-        self.translate(self.vehicle)
-        verify(translation_event_mock).send(sender=self.vehicle)
+        self.translate(self.vehicle, time_now=2)
+        verify(translation_event_mock).send(sender=self.vehicle, timestamp=2)
 
     def fix_idm_acceleration(self, acceleration):
         when(Idm).calculate_acceleration(self.vehicle, self.vehicle.leader()).thenReturn(acceleration)
 
-    def translate(self, vehicle, change_lane=None, time_delta=1):
+    def translate(self, vehicle, change_lane=None, time_delta=1, time_now=0):
         when(LaneChangeModel).vehicle_should_change_lane(vehicle).thenReturn(change_lane)
         when(vehicle).leader().thenReturn(dummy_leader)
-        vehicle.translate(time_delta)
+        vehicle.translate(time_delta, time_now)
         return vehicle, self.target_lane, self.lane
