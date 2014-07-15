@@ -26,6 +26,15 @@ def run():
     process.join()
 
 
+def load_network():
+    edge = TwoLaneOneWayEdge(0, 100)
+    lane_1 = Lane(0, edge)
+    lane_2 = Lane(1, edge)
+    Vehicle(0, lane_1)
+    Vehicle(0, lane_2)
+    return [edge]
+
+
 def start():
     pass
 
@@ -38,14 +47,5 @@ def stop():
 def pause():
     # Interrupt the sim and pause the clocks
     pass
-
-
-def load_network():
-    edge = TwoLaneOneWayEdge(0, 100)
-    lane_1 = Lane(0, edge)
-    lane_2 = Lane(1, edge)
-    Vehicle(0, lane_1)
-    Vehicle(0, lane_2)
-    return [edge]
 
 run()

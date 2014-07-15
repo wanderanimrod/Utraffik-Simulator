@@ -1,16 +1,16 @@
+from Queue import Queue
+
 from app.events.events import E_TRANSLATE
 
 
-class SnapshotRelay:
+vehicle_snapshots_queue = Queue()
 
+
+class SnapshotRelay:
     def __init__(self):
-        self.__snapshots = []
         E_TRANSLATE.connect(self.__add_snapshot)
 
-    def __add_snapshot(self, sender, **kwargs):
-        self.__snapshots.append(sender)
-
-    def get_all_snapshots(self):
-        snapshots = self.__snapshots
-        self.__snapshots = []
-        return snapshots
+    @staticmethod
+    def __add_snapshot(sender, **kwargs):
+        vehicle_snapshots_queue.put(sender)
+        print "Snapshot added for vehicle : ", sender
