@@ -14,3 +14,13 @@ class SnapshotRelay:
     def __add_snapshot(sender, **kwargs):
         vehicle_snapshots_queue.put(sender)
         print "Snapshot added for vehicle : ", sender
+
+
+class ReferenceRelay:
+
+    def __init__(self, q):
+        self.q = q
+        E_TRANSLATE.connect(self.add)
+
+    def add(self, sender, **kwargs):
+        self.q.put(sender)
