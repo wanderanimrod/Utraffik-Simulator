@@ -30,7 +30,7 @@ class Translator:
         if not self.__translatables:
             self.is_waiting = True
 
-    def __end_of_journey_listener(self, sender, **kwargs):
+    def __end_of_journey_listener(self, sender, **_):
         """ All vehicles in a process will belong to that process' translator. Since there is one translator per
             process, there is no chance that the vehicle wont belong to this translator
         """

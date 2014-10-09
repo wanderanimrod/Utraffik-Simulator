@@ -26,7 +26,7 @@ class SnapshotRelayTest(TestCase):
         """
     def test_should_put_vehicle_snapshot_on_the_sim_queue_when_translation_event_is_fired(self):
         snapshots = Queue()
-        relay = SnapshotRelay(snapshots)  # See notes about this line at the start of the method
+        _ = SnapshotRelay(snapshots)  # See notes about this line at the start of the method
         vehicle = Vehicle(0, mock())
         E_TRANSLATE.send(sender=vehicle)
         self.assertEqual(snapshots.get_nowait(), vehicle)

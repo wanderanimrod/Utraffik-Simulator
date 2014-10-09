@@ -1,5 +1,3 @@
-from Queue import Queue
-
 from app.events.events import E_TRANSLATE
 
 
@@ -8,5 +6,5 @@ class SnapshotRelay:
         self.__snapshots = snapshots
         E_TRANSLATE.connect(self.__add_snapshot)
 
-    def __add_snapshot(self, sender, **kwargs):
+    def __add_snapshot(self, sender, **_):
         self.__snapshots.put(sender)
