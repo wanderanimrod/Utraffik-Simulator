@@ -10,7 +10,6 @@ from models.traffic_models.lane_change_model import LaneChangeModel
 
 
 class VehicleTest(TestCase):
-
     def setUp(self):
         self.lane = mock()
         self.target_lane = mock()

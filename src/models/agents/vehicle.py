@@ -4,7 +4,6 @@ from models.traffic_models.lane_change_model import LaneChangeModel
 
 
 class Vehicle:
-
     def __init__(self, vehicle_id, lane):
         self.id = vehicle_id
         self.lane = lane
@@ -35,9 +34,9 @@ class Vehicle:
     def translate(self, time_delta, time_now):
         u = self.velocity
         a = Idm.calculate_acceleration(self, self.leader())
-        s = u*time_delta + 0.5*(a*(time_delta**2))
+        s = u * time_delta + 0.5 * (a * (time_delta ** 2))
         self.__update_position_if_still_on_lane(s)
-        self.velocity = u + a*time_delta
+        self.velocity = u + a * time_delta
         self.acceleration = a
         self.__change_lane_if_necessary()
         E_TRANSLATE.send(sender=self, timestamp=time_now)
