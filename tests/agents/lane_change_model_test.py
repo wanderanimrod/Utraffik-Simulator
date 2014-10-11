@@ -65,8 +65,8 @@ class LaneChangeModelTest(TestCase):
         when(requester).prospective_leader().thenReturn(prospective_leader_far_away)
         when(requester).prospective_follower().thenReturn(make_dummy_follower())
         when(requester).follower().thenReturn(follower_nearby)
-        self.assertGreater(LaneChangeModel._LaneChangeModel__calculate_lane_change_incentive,
-                           LaneChangeModel._LaneChangeModel__lane_change_threshold)
+        self.assertGreater(LaneChangeModel._calculate_lane_change_incentive,
+                           LaneChangeModel._lane_change_threshold)
         return requester
 
     def make_lane_change_scenario_with_ample_clearance_for(self, requester):

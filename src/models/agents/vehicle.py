@@ -35,13 +35,13 @@ class Vehicle:
         u = self.velocity
         a = Idm.calculate_acceleration(self, self.leader())
         s = u * time_delta + 0.5 * (a * (time_delta ** 2))
-        self.__update_position_if_still_on_lane(s)
+        self._update_position_if_still_on_lane(s)
         self.velocity = u + a * time_delta
         self.acceleration = a
-        self.__change_lane_if_necessary()
+        self._change_lane_if_necessary()
         E_TRANSLATE.send(sender=self, timestamp=time_now)
 
-    def __update_position_if_still_on_lane(self, displacement):
+    def _update_position_if_still_on_lane(self, displacement):
         new_position = self.position + displacement
         if new_position <= self.lane.length:
             self.position = new_position
@@ -50,7 +50,7 @@ class Vehicle:
             E_END_OF_LANE.send(sender=self, next_lane=None)
             E_END_OF_JOURNEY.send(sender=self)
 
-    def __change_lane_if_necessary(self):
+    def _change_lane_if_necessary(self):
         if LaneChangeModel.vehicle_should_change_lane(self):
             target_lane = self.lane.next_lane()
             self.lane.remove_vehicle(self)

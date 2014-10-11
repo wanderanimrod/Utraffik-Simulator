@@ -9,12 +9,12 @@ class Clock():
         self.__start_time = 0
 
     def time_elapsed(self):
-        time_now, time_elapsed = self.__get_time()
+        time_now, time_elapsed = self._get_time()
         self.__time_of_last_call = time_now
         return time_elapsed
 
     def now(self):
-        time_now, _ = self.__get_time()
+        time_now, _ = self._get_time()
         return time_now - self.__start_time
 
     def start(self, at=None):
@@ -28,7 +28,7 @@ class Clock():
     def stop(self):
         self.__stopped = True
 
-    def __get_time(self):
+    def _get_time(self):
         if self.__stopped:
             return 0, 0
         time_now = time()

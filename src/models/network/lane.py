@@ -19,14 +19,14 @@ class Lane:
         self.vehicles.remove(vehicle)
 
     def get_leader(self, requester):
-        return self.__get_leader_or_dummy(requester, self.vehicles)
+        return self._get_leader_or_dummy(requester, self.vehicles)
 
     def get_follower(self, requester):
         return self.__get_follower_or_dummy(requester, self.vehicles)
 
     def get_prospective_leader(self, vehicle_joining):
         sorted_vehicles = self.__copy_insert_and_sort(vehicle_joining, self.vehicles)
-        return self.__get_leader_or_dummy(vehicle_joining, sorted_vehicles)
+        return self._get_leader_or_dummy(vehicle_joining, sorted_vehicles)
 
     def get_prospective_follower(self, vehicle_joining):
         sorted_vehicles = self.__copy_insert_and_sort(vehicle_joining, self.vehicles)
@@ -40,7 +40,7 @@ class Lane:
         return self.__parent_edge.lane_next_to(self)
 
     @staticmethod
-    def __get_leader_or_dummy(requester, vehicles):
+    def _get_leader_or_dummy(requester, vehicles):
         index_of_requester = vehicles.index(requester)
         if index_of_requester == 0:
             return dummy_leader
