@@ -13,7 +13,7 @@ class SnapshotRelayTest(TestCase):
 
     """
         A note about this line: relay = SnapshotRelay(snapshots)
-        The SnapshotRelay object will not put anything on its internal queue if when it is instantiated,
+        The SnapshotRelay object will not put anything on the queue if when it is instantiated,
          the instance is not assigned to an variable.
 
          This is very strange. WHAT DOES PYTHON DO WHEN YOU ASSIGN A NEW INSTANCE OF A CLASS TO A VARIABLE
@@ -27,7 +27,7 @@ class SnapshotRelayTest(TestCase):
         mock_lane.id = 10
         vehicle = Vehicle(0, mock_lane)
 
-        E_TRANSLATE.send(sender=vehicle)
+        E_TRANSLATE.send(sender=vehicle, timestamp=100)
 
-        expected_snapshot = {'acc': 0.0, 'position': 0.0, 'lane': mock_lane.id, 'id': 0, 'velocity': 0.0}
+        expected_snapshot = {'acc': 0.0, 'position': 0.0, 'lane': mock_lane.id, 'id': 0, 'velocity': 0.0, 'time': 100}
         self.assertEqual(snapshots.get(), expected_snapshot)
