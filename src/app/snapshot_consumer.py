@@ -1,3 +1,4 @@
+from time import sleep
 from redis import StrictRedis
 
 db = StrictRedis(host='localhost', port=6379, db=0)
@@ -24,4 +25,6 @@ def run(queue):
 
         if kill:
             break
+
+        sleep(0.1)  # Sleep periodically to avoid 100% CPU time. Empty queue 10 times per second.
 
