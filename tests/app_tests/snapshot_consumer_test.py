@@ -1,8 +1,12 @@
 from multiprocessing import Queue
+from time import sleep
 from unittest import TestCase
+
 from redis import StrictRedis
-from app import snapshot_consumer
+
+
 from app.snapshot_consumer import KILL_SIGNAL
+from app import snapshot_consumer
 
 
 class SnapshotConsumerTest(TestCase):
@@ -17,6 +21,7 @@ class SnapshotConsumerTest(TestCase):
 
         snapshot_consumer.run(self.snapshot_queue)
 
+        sleep(0.5)  # Wait for snapshot writer thread to finish
         snapshots_in_db = [self.db.hgetall(key) for key in ['snapshot_1', 'snapshot_2']]
         expected_snapshots = [self.stringify_id_for(snapshot) for snapshot in [snapshot_one, snapshot_two]]
 
@@ -33,3 +38,5 @@ class SnapshotConsumerTest(TestCase):
 
     def tearDown(self):
         self.db.delete('snapshot_1', 'snapshot_2')
+
+

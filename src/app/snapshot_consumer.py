@@ -1,4 +1,5 @@
 import threading
+from time import sleep
 
 from redis import StrictRedis
 
@@ -7,20 +8,23 @@ KILL_SIGNAL = -1
 
 
 def run(queue):
-    threading.Timer(0.1, write_snapshots_to_db, args=[queue]).start()
+    threading.Thread(target=write_snapshots_to_db, args=(queue,)).start()
 
 
 def write_snapshots_to_db(queue=None):
-    snapshots = []
-    while not queue.empty():
-        item = queue.get()
-        if item is KILL_SIGNAL:
-            current_thread = threading.current_thread()
-            current_thread.cancel()
-        else:
-            snapshots.append(item)
+    while True:
+        kill = False
+        snapshots = []
+        while not queue.empty():
+            item = queue.get()
+            kill = True if item is KILL_SIGNAL else snapshots.append(item)
 
-    _store_snapshots(snapshots)
+        _store_snapshots(snapshots)
+
+        sleep(0.1)  # Sleep periodically to avoid 100% CPU time
+
+        if kill:
+            break
 
 
 def _store_snapshots(snapshots):
