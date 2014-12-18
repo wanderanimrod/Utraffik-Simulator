@@ -19,9 +19,11 @@ class SnapshotConsumerTest(TestCase):
         snapshot_two = {'id': 2, 'other_details': 'Vehicle data'}
         [self.snapshot_queue.put(item) for item in [snapshot_one, snapshot_two, KILL_SIGNAL]]
 
-        snapshot_consumer.run(self.snapshot_queue)
+        consumer_thread = snapshot_consumer.run(self.snapshot_queue)
 
-        sleep(0.5)  # Wait for snapshot writer thread to finish
+        while consumer_thread.is_alive():
+            sleep(0.01)
+
         snapshots_in_db = [self.db.hgetall(key) for key in ['snapshot_1', 'snapshot_2']]
         expected_snapshots = [self.stringify_id_for(snapshot) for snapshot in [snapshot_one, snapshot_two]]
 

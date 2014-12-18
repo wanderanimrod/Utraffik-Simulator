@@ -19,6 +19,7 @@ def start_translator(sub_network, sim_start_time):
 
 
 def run():
+    # Clean up snapshots db
     sub_net_1 = load_network()
     sim_start_time = time()
     process = Process(target=start_translator, args=(sub_net_1, sim_start_time))

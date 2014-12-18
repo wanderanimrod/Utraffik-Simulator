@@ -9,7 +9,9 @@ KILL_SIGNAL = -1
 
 
 def run(queue):
-    threading.Thread(target=write_snapshots_to_db, args=(queue,)).start()
+    writer_thread = threading.Thread(target=write_snapshots_to_db, args=(queue,))
+    writer_thread.start()
+    return writer_thread
 
 
 def write_snapshots_to_db(queue=None):
