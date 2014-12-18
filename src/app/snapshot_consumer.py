@@ -2,8 +2,9 @@ import threading
 from time import sleep
 
 from redis import StrictRedis
+from settings import REDIS, SNAPSHOTS_DB
 
-db = StrictRedis(host='localhost', port=6379, db=0)
+db = StrictRedis(host=REDIS['host'], port=REDIS['port'], db=SNAPSHOTS_DB)
 KILL_SIGNAL = -1
 
 
