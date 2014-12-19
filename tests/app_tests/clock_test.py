@@ -7,7 +7,7 @@ from app.clock import Clock
 class ClockTest(TestCase):
 
     def setUp(self):
-        self.assert_almost_equal = lambda evaluated, expected: self.assertAlmostEqual(evaluated, expected, places=2)
+        self.assert_almost_equal = lambda evaluated, expected: self.assertAlmostEqual(evaluated, expected, places=1)
 
     def get_started_clock(self):
         return Clock().start()
