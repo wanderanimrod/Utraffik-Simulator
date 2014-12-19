@@ -1,37 +1,37 @@
 from multiprocessing import Queue
-from time import sleep
 from unittest import TestCase
 
 from redis import StrictRedis
 
-
-from app.snapshot_consumer import KILL_SIGNAL
-from app import snapshot_consumer
+from app.snapshot_writer import SnapshotWriter
+from settings import SNAPSHOTS_DB, REDIS
 
 
 class SnapshotConsumerTest(TestCase):
     def setUp(self):
         self.snapshot_queue = Queue()
-        self.db = StrictRedis(host='localhost', port=6379, db=0)
+        self.db = StrictRedis(host=REDIS['host'], port=REDIS['port'], db=SNAPSHOTS_DB)
 
     def test_should_read_snapshots_from_queue_periodically_and_write_them_to_redis_db(self):
         snapshot_one = {'id': 1, 'other_details': 'Vehicle data'}
         snapshot_two = {'id': 2, 'other_details': 'Vehicle data'}
-        [self.snapshot_queue.put(item) for item in [snapshot_one, snapshot_two, KILL_SIGNAL]]
+        [self.snapshot_queue.put(item) for item in [snapshot_one, snapshot_two]]
 
-        consumer_thread = snapshot_consumer.run(self.snapshot_queue)
+        writer = SnapshotWriter(self.snapshot_queue)
+        writer.start()
 
-        while consumer_thread.is_alive():
-            sleep(0.01)
+        writer.wait_for_work_to_end(timeout=0.3)
+        writer.shutdown()
 
         snapshots_in_db = [self.db.hgetall(key) for key in ['snapshot_1', 'snapshot_2']]
         expected_snapshots = [self.stringify_id_for(snapshot) for snapshot in [snapshot_one, snapshot_two]]
 
         self.assertListEqual(snapshots_in_db, expected_snapshots)
 
-    def test_should_stop_reading_snapshots_if_kill_signal_is_put_on_queue(self):
-        self.snapshot_queue.put(KILL_SIGNAL)
-        snapshot_consumer.run(self.snapshot_queue)
+    def test_should_stop_reading_snapshots_if_shutdown_is_requested(self):
+        writer = SnapshotWriter(self.snapshot_queue)
+        writer.start()
+        writer.shutdown()
         self.assertTrue(True)  # Tests that we get here
 
     def stringify_id_for(self, snapshot):
