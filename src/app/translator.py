@@ -16,7 +16,7 @@ class Translator:
         time_delta = clock.time_elapsed()
         time_now = clock.now()
         for vehicle in copy(self._translatables):
-            vehicle.translate(time_delta, time_now)
+            vehicle.translate(time_delta*5, time_now)
         self._check_load()
 
     def _get_vehicles(self):

@@ -21,17 +21,17 @@ class SnapshotWriter(threading.Thread):
                 snapshots.append(item)
 
             self._store_snapshots(snapshots)
-
-            sleep(0.1)  # Sleep periodically to avoid 100% CPU consumption
+            del snapshots[:]
 
             if self._stop_signal.is_set():
                 break
 
     @staticmethod
     def _store_snapshots(snapshots):
+        print "*" * 20, "writing %d snapshots" % len(snapshots), "*" * 20
         pipeline = db.pipeline()
         for snapshot in snapshots:
-            name = 'snapshot_%d' % snapshot['id']
+            name = 'snapshot_%d:%f' % (snapshot['id'], snapshot['time'])
             pipeline.hmset(name, snapshot)
         pipeline.execute()
 

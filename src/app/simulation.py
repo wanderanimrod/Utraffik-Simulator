@@ -1,30 +1,54 @@
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 from time import time
+from datetime import datetime
+from redis import StrictRedis
 
 from app.clock import Clock
+from app.snapshot_relay import SnapshotRelay
+from app.snapshot_writer import SnapshotWriter
 from app.translator import Translator
 from models.agents.vehicle import Vehicle
 from models.network.lane import Lane
 from models.network.two_lane_one_way_edge import TwoLaneOneWayEdge
+from settings import SNAPSHOTS_DB, REDIS
 
 
-def start_translator(sub_network, sim_start_time):
+def start_sub_sim(sub_network, sim_start_time):
     translator = Translator(sub_network)
     clock = Clock().start(at=sim_start_time)
+
+    vehicle_snapshots = Queue()
+    _ = SnapshotRelay(vehicle_snapshots)
+    writer = SnapshotWriter(vehicle_snapshots)
+    writer.start()
+
     while not translator.is_waiting:
         translator.sweep(clock)
-        # Relay snapshots to redis
         # Check for stop/pause commands and act accordingly
-    print "Done translating"
+
+    print "*" * 20, "Shutting down snapshot writer ...", "*" * 20
+    writer.shutdown()
+    writer.join()
+
+    print "Sub-sim finished!"
 
 
 def run():
-    # Clean up snapshots db
+    clean_db()
+    started_at = datetime.now()
     sub_net_1 = load_network()
     sim_start_time = time()
-    process = Process(target=start_translator, args=(sub_net_1, sim_start_time))
+    process = Process(target=start_sub_sim, args=(sub_net_1, sim_start_time))
     process.start()
     process.join()
+    finished_at = datetime.now()
+
+    print "Sim finished in %f" % (finished_at - started_at).total_seconds()
+
+
+def clean_db():
+    db = StrictRedis(host=REDIS['host'], port=REDIS['port'], db=SNAPSHOTS_DB)
+    db.flushdb()
 
 
 def load_network():
