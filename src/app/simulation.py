@@ -1,6 +1,6 @@
 from multiprocessing import Process, Queue
 from time import time
-from datetime import datetime
+
 from redis import StrictRedis
 
 from app.clock import Clock
@@ -30,20 +30,19 @@ def start_sub_sim(sub_network, sim_start_time):
     writer.shutdown()
     writer.join()
 
-    print "Sub-sim finished!"
+    print "Sub-sim finished."
 
 
 def run():
     clean_db()
-    started_at = datetime.now()
+    print "Sim starting..."
     sub_net_1 = load_network()
     sim_start_time = time()
     process = Process(target=start_sub_sim, args=(sub_net_1, sim_start_time))
     process.start()
     process.join()
-    finished_at = datetime.now()
 
-    print "Sim finished in %f" % (finished_at - started_at).total_seconds()
+    print "Sim finished!"
 
 
 def clean_db():
@@ -52,11 +51,11 @@ def clean_db():
 
 
 def load_network():
-    edge = TwoLaneOneWayEdge(0, 100)
+    edge = TwoLaneOneWayEdge(0, 10)
     lane_1 = Lane(0, edge)
     lane_2 = Lane(1, edge)
     Vehicle(0, lane_1)
-    Vehicle(0, lane_2)
+    Vehicle(1, lane_2)
     return [edge]
 
 
@@ -73,4 +72,5 @@ def pause():
     # Interrupt the sim and pause the clocks
     pass
 
-run()
+
+# run()

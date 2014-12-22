@@ -1,14 +1,13 @@
 import threading
-from time import sleep
 
 from redis import StrictRedis
+
 from settings import REDIS, SNAPSHOTS_DB
 
 db = StrictRedis(host=REDIS['host'], port=REDIS['port'], db=SNAPSHOTS_DB)
 
 
 class SnapshotWriter(threading.Thread):
-
     def __init__(self, snapshots_queue):
         super(SnapshotWriter, self).__init__(target=self._write_snapshots_to_db, args=(snapshots_queue,))
         self._stop_signal = threading.Event()
@@ -28,7 +27,7 @@ class SnapshotWriter(threading.Thread):
 
     @staticmethod
     def _store_snapshots(snapshots):
-        print "*" * 20, "writing %d snapshots" % len(snapshots), "*" * 20
+        print "writing %d snapshots" % len(snapshots)
         pipeline = db.pipeline()
         for snapshot in snapshots:
             name = 'snapshot_%d:%f' % (snapshot['id'], snapshot['time'])

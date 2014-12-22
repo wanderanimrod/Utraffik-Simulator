@@ -16,10 +16,11 @@ class Translator:
         time_delta = clock.time_elapsed()
         time_now = clock.now()
         for vehicle in copy(self._translatables):
-            vehicle.translate(time_delta*5, time_now)
+            vehicle.translate(time_delta, time_now)
         self._check_load()
 
     def _get_vehicles(self):
+        # TODO use a reduce here.
         vehicles = []
         for edge in self.edges:
             if edge.vehicles():
