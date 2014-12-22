@@ -2,6 +2,7 @@ from multiprocessing import Process, Queue
 from time import time
 
 from redis import StrictRedis
+import signal
 
 from app.clock import Clock
 from app.snapshot_relay import SnapshotRelay
@@ -18,16 +19,17 @@ def start_sub_sim(sub_network, sim_start_time):
     clock = Clock().start(at=sim_start_time)
 
     vehicle_snapshots = Queue()
+    snapshot_writer_command_queue = Queue()
     _ = SnapshotRelay(vehicle_snapshots)
-    writer = SnapshotWriter(vehicle_snapshots)
+    writer = SnapshotWriter(vehicle_snapshots, snapshot_writer_command_queue)
     writer.start()
 
     while not translator.is_waiting:
         translator.sweep(clock)
         # Check for stop/pause commands and act accordingly
 
+    snapshot_writer_command_queue.put(signal.SIGTERM)
     print "*" * 20, "Shutting down snapshot writer ...", "*" * 20
-    writer.shutdown()
     writer.join()
 
     print "Sub-sim finished."
