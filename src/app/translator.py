@@ -20,12 +20,7 @@ class Translator:
         self._check_load()
 
     def _get_vehicles(self):
-        # TODO use a reduce here.
-        vehicles = []
-        for edge in self.edges:
-            if edge.vehicles():
-                vehicles.extend(edge.vehicles())
-        return vehicles
+        return reduce(lambda vehicles, edge: vehicles + edge.vehicles(), self.edges, [])
 
     def _check_load(self):
         if not self._translatables:

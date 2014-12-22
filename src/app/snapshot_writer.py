@@ -19,15 +19,15 @@ class SnapshotWriter(threading.Thread):
                 item = queue.get()
                 snapshots.append(item)
 
-            self._store_snapshots(snapshots)
-            del snapshots[:]
+            if snapshots:
+                self._store_snapshots(snapshots)
+                del snapshots[:]
 
             if self._stop_signal.is_set():
                 break
 
     @staticmethod
     def _store_snapshots(snapshots):
-        print "writing %d snapshots" % len(snapshots)
         pipeline = db.pipeline()
         for snapshot in snapshots:
             name = 'snapshot_%d:%f' % (snapshot['id'], snapshot['time'])

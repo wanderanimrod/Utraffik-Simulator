@@ -73,4 +73,4 @@ def pause():
     pass
 
 
-# run()
+run()
