@@ -14,7 +14,7 @@ from app.snapshot_writer import SnapshotWriter
 from settings import SNAPSHOTS_DB, REDIS
 
 
-class SnapshotConsumerTest(TestCase):
+class SnapshotWriterTest(TestCase):
     def setUp(self):
         self.snapshot_queue = Queue()
         self.db = StrictRedis(host=REDIS['host'], port=REDIS['port'], db=SNAPSHOTS_DB)
