@@ -30,7 +30,7 @@ class SnapshotWriter(threading.Thread):
     def _store_snapshots(snapshots):
         pipeline = db.pipeline()
         for snapshot in snapshots:
-            name = 'snapshot_%d:%f' % (snapshot['id'], snapshot['time'])
+            name = 'vehicle:%d:%f' % (snapshot['id'], snapshot['time'])
             pipeline.hmset(name, snapshot)
         pipeline.execute()
 

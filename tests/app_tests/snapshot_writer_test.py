@@ -30,7 +30,7 @@ class SnapshotWriterTest(TestCase):
         sleep(0.3)
         self.writer.shutdown()
 
-        snapshots_in_db = [self.db.hgetall(key) for key in ['snapshot_1:1.000000', 'snapshot_2:1.000000']]
+        snapshots_in_db = [self.db.hgetall(key) for key in ['vehicle:1:1.000000', 'vehicle:2:1.000000']]
         expected_snapshots = [self.redisify_snapshot(snapshot) for snapshot in [snapshot_one, snapshot_two]]
 
         self.assertListEqual(snapshots_in_db, expected_snapshots)
@@ -44,7 +44,7 @@ class SnapshotWriterTest(TestCase):
         sleep(0.1)
         self.writer.shutdown()
 
-        self.assertTrue('snapshot_1:1.123460' in self.db.keys("*"))
+        self.assertTrue('vehicle:1:1.123460' in self.db.keys("*"))
 
     def test_should_stop_reading_snapshots_if_shutdown_is_requested(self):
         writer = SnapshotWriter(self.snapshot_queue)
